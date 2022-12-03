@@ -1,0 +1,190 @@
+version: '3.9'
+services:
+
+  proxy:
+    build:
+      context: ./proxy/
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - ./proxy/conf.d/:/etc/nginx/conf.d/
+      - portfolio_statics:/portfolio/staticfiles
+      - middle_earth_statics:/middle_earth/staticfiles
+    networks:
+      - portfolio_network
+
+  portfolio:
+#    for production uncomment the line below:
+#    image: kcisijohnny/portfolio
+#    for development uncomment the line below:
+    build: portfolio
+    restart: always
+    ports:
+      - '5000:5000'
+    networks:
+      - portfolio_network
+    volumes:
+      - ./portfolio/:/code/
+      - portfolio_statics:/code/staticfiles
+    environment:
+      - DEBUG=1
+      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
+      - POSTGRES_DB=portfolio_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=e5runertuw54u542
+
+  middleearthfront:
+    #    for production uncomment the line below:
+    #    image: kcisijohnny/portfolio
+    #    for development uncomment the line below:
+    build: middle_earth_front
+    restart: always
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db_front
+    networks:
+      - portfolio_network
+    volumes:
+      - ./middle_earth_front/:/code/
+      - middle_earth_statics:/code/staticfiles
+    environment:
+      - DEBUG=1
+      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
+      - POSTGRES_DB=db_front
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=e5runertuw54u542
+
+  middleearthauth:
+    #    for production uncomment the line below:
+    #    image: kcisijohnny/portfolio
+    #    for development uncomment the line below:
+    build: middle_earth_auth
+    restart: always
+    ports:
+      - '8001:8001'
+    depends_on:
+      - db_auth
+    networks:
+      - portfolio_network
+
+    environment:
+      - DEBUG=0
+      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
+      - POSTGRES_DB=db_auth
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=e5runertuw54u542
+
+  middleearthitems:
+    #    for production uncomment the line below:
+    #    image: kcisijohnny/portfolio
+    #    for development uncomment the line below:
+    build: middle_earth_items
+    restart: always
+    ports:
+      - '8002:8002'
+    depends_on:
+      - db_items
+    networks:
+      - portfolio_network
+    volumes:
+      - ./middle_earth_items/:/code/
+    environment:
+      - DEBUG=1
+      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
+      - POSTGRES_DB=db_items
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=e5runertuw54u542
+
+  middleearthinventory:
+    #    for production uncomment the line below:
+    #    image: kcisijohnny/portfolio
+    #    for development uncomment the line below:
+    build: middle_earth_inventory
+    restart: always
+    ports:
+      - '8003:8003'
+    depends_on:
+      - db_inventory
+    networks:
+      - portfolio_network
+    volumes:
+      - ./middle_earth_inventory/:/code/
+      - ./portfolio/db.sqlite3:/code/db.sqlite3
+    environment:
+      - DEBUG=0
+      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
+      - POSTGRES_DB=db_inventory
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=e5runertuw54u542
+
+  db_front:
+    image: postgres
+    restart: always
+    expose:
+      - "5432"
+    networks:
+      - portfolio_network
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=market
+      - POSTGRES_PASSWORD=e5runertuw54u542
+    volumes:
+      - front_data:/var/lib/postgresql/data
+
+  db_auth:
+    image: postgres
+    restart: always
+    expose:
+      - "5432"
+    networks:
+      - portfolio_network
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=market
+      - POSTGRES_PASSWORD=e5runertuw54u542
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
+  db_items:
+    image: postgres
+    restart: always
+    expose:
+      - "5432"
+    networks:
+      - portfolio_network
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=market
+      - POSTGRES_PASSWORD=e5runertuw54u542
+    volumes:
+      - items_data:/var/lib/postgresql/data
+
+  db_inventory:
+    image: postgres
+    restart: always
+    expose:
+      - "5432"
+    networks:
+      - portfolio_network
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=market
+      - POSTGRES_PASSWORD=e5runertuw54u542
+    volumes:
+      - inventory_data:/var/lib/postgresql/data
+
+networks:
+  portfolio_network:
+
+volumes:
+  portfolio_statics:
+  middle_earth_statics:
+  portfolio_db_data:
+  front_data:
+  auth_data:
+  items_data:
+  inventory_data:
+
+

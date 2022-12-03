@@ -1,0 +1,10 @@
+server {
+    listen        80;
+    server_name   localhost;
+    location / {
+        proxy_pass http://portfolio:5000;
+    }
+    location /middle-earth {
+        proxy_pass http://middle_earth_front:8000;
+    }
+}

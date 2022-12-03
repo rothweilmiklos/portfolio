@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <title>Miklos Rothweil Portfolio</title>
+
+        <link rel="icon" href="data:;base64,=">
+
+        <!--    CSS links-->
+        <link rel="stylesheet" href="{% static 'main/assets/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'main/assets/css/aos.css' %}">
+        <link rel="stylesheet" href="{% static 'main/assets/css/line-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+    </head>
+
+    <body data-bs-spy="scroll" data-bs-target=".navbar">
+
+        <div id="content-wrapper">
+
+            <!--Navbar-->
+            {% include 'main/includes/navbar.html' %}
+            <!--//Navbar-->
+
+            {% block content %}
+                <!--Unique content for each page-->
+            {% endblock %}
+
+            <!-- FOOTER -->
+            {% include 'main/includes/footer.html' %}
+            <!-- //FOOTER -->
+
+        </div>
+
+        <!--    Javascript links-->
+        <script src="{% static 'main/assets/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'main/assets/js/aos.js' %}"></script>
+        <script src="{% static 'main/assets/js/main.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+    </body>
+
+</html>

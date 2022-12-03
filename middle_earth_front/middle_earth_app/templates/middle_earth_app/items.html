@@ -1,0 +1,41 @@
+{% extends 'middle_earth_app/base.html' %}
+
+{% block title %}
+    Middle Earth Market - ItemsPage
+{% endblock %}
+
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Image</th>
+                <th scope="col">Price</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+              {% include 'middle_earth_app/includes/items_modals.html' %}
+                <tr>
+                    <th scope="row">{{ item.id }}</th>
+                        <td>{{ item.name }}</td>
+                        <td><img style="width:64px" src="{{ item.image_url }}" alt="{{ item.name }}"></td>
+                        <td>${{ item.price }}</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary"
+                                    data-toggle="modal" data-target="#Modal-MoreInfo{{ item.id }}">
+                                More Info
+                            </button>
+                            <button type="button" class="btn btn-outline-success"
+                                    data-toggle="modal" data-target="#Modal-PurchaseConfirm{{ item.id }}">
+                                Purchase
+                            </button>
+                        </td>
+                    </th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
