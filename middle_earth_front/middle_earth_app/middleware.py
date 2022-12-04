@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 
+import middle_earth_app.requests
 from . import utilities, constants
 
 
@@ -38,7 +39,7 @@ def check_valid_new_token(request, response):
 
 def try_refresh_token(request, refresh_token):
     parameter = {"refresh": refresh_token}
-    refresh_token_response = utilities.send_post_request(end_point=REFRESH_TOKEN_ENDPOINT, parameters=parameter)
+    refresh_token_response = middle_earth_app.requests.send_post_request(end_point=REFRESH_TOKEN_ENDPOINT, parameters=parameter)
     check_valid_new_token(request, refresh_token_response)
     return request
 
