@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
 from .decorators import check_if_user_logged_in
-from . import requests, shop_view_post, shop_view_get
+from . import requests, shop_view_post, shop_view_get, inventory_view_post, inventory_view_get
 from .models import AuthenticatedUserCaste
 from .decode import decode_access_token
 
@@ -84,61 +84,21 @@ class InventoryView(LoginRequiredMixin, View):
 
     @staticmethod
     def get(request):
-        username = request.user.username
-        end_point_for_user_filtered_equipments = MIDDLE_EARTH_USER_INVENTORY_END_POINT + username + "/"
-        user_access_token = request.session.get("access_token")
-        headers = {
-            "Authorization": f"Bearer {user_access_token}"
-        }
-        equipments_from_inventory_api = requests.send_get_request(end_point=end_point_for_user_filtered_equipments,
-                                                                  headers=headers)
-        items_from_inventory_api_json = equipments_from_inventory_api.json()
-        return render(request, "middle_earth_app/inventory.html", {"items": items_from_inventory_api_json})
+        user_inventory = inventory_view_get.get_user_inventory(request)
+        return render(request, "middle_earth_app/inventory.html", {"items": user_inventory})
 
     @staticmethod
     def post(request):
-        inventory_id = request.POST["sold_equipment_id"]
-        end_point_for_inventory_id_filtered_inventory = MIDDLE_EARTH_INVENTORY_SELL_END_POINT + inventory_id + "/"
-        user_access_token = request.session.get("access_token")
-        headers = {
-            "Authorization": f"Bearer {user_access_token}"
-        }
+        inventory_get_response_json = inventory_view_post.get_sold_inventory_from_api(request)
+        seller_get_response_json = inventory_view_post.get_seller_from_api(request)
 
-        username = request.user.username
-        end_point_for_user = MIDDLE_EARTH_USERS_ENDPOINT + username + "/"
-        user_get_request = requests.send_get_request(end_point=end_point_for_user, headers=headers)
-        user_get_request_json = user_get_request.json()
-
-        item_to_be_sold_get_request = requests.send_get_request(
-            end_point=end_point_for_inventory_id_filtered_inventory,
-            headers=headers)
-        item_to_be_sold_get_request_json = item_to_be_sold_get_request.json()
-
-        sell_equipment_post_request = requests.send_delete_request(
-            end_point=end_point_for_inventory_id_filtered_inventory,
-            headers=headers)
-
-        if sell_equipment_post_request.status_code != 204:
+        if inventory_view_post.sell_inventory(request).status_code != 204:
             messages.error(request, "Sorry, you can not sell this item right now. Please try again later!")
             return redirect("inventory")
 
-        credit_for_sold_item = item_to_be_sold_get_request_json["item_price"]
-        user_credit = user_get_request_json["credit"]
-
-        user_updated_credit = user_credit + credit_for_sold_item
-
-        parameters_for_update_credit = {
-            "credit": user_updated_credit
-        }
-
-        end_point_for_update_user = MIDDLE_EARTH_USER_UPDATE_ENDPOINT + username + "/"
-
-        update_user_credit = requests.send_patch_request(end_point=end_point_for_update_user,
-                                                         parameters=parameters_for_update_credit,
-                                                         headers=headers)
+        inventory_view_post.update_seller_credit(request, seller_get_response_json, inventory_get_response_json)
 
         messages.success(request, "You have successfully sold this equipment!")
-
         return redirect("inventory")
 
 

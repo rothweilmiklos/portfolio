@@ -112,7 +112,6 @@ services:
       - portfolio_network
     volumes:
       - ./middle_earth_inventory/:/code/
-      - ./portfolio/db.sqlite3:/code/db.sqlite3
     environment:
       - DEBUG=1
       - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
