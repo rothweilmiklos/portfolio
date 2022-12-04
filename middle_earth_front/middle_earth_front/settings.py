@@ -42,7 +42,7 @@ DEBUG = 1 == int(os.environ.get('DEBUG'))
 # DEBUG = DEBUG_VALUE
 
 
-ALLOWED_HOSTS = ['192.168.0.106', '127.0.0.1', 'middleearthfront', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'middleearthfront', 'localhost']
 
 
 # Application definition
@@ -143,7 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_HTTPONLY = True
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 MESSAGE_TAGS = {

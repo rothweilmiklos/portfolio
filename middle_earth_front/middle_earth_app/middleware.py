@@ -4,10 +4,10 @@ from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 
 import middle_earth_app.requests
-from . import utilities, constants
+from . import decode
 
 
-REFRESH_TOKEN_ENDPOINT = constants.REFRESH_TOKEN_ENDPOINT
+REFRESH_TOKEN_ENDPOINT = "http://middleearthauth:8001/api/token/refresh/"
 
 
 def return_response_without_further_modification(request, get_response):
@@ -58,7 +58,7 @@ def refresh_token_middleware(get_response):
         if not request.user.is_authenticated or access_token is None:
             return return_response_without_further_modification(request, get_response)
 
-        access_token_payload = utilities.decode_access_token(access_token)
+        access_token_payload = decode.decode_access_token(access_token)
 
         request = validate_token_against_expiration(request, access_token_payload, refresh_token)
 

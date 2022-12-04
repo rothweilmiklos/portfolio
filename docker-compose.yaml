@@ -68,9 +68,10 @@ services:
       - db_auth
     networks:
       - portfolio_network
-
+    volumes:
+      - ./middle_earth_auth/:/code/
     environment:
-      - DEBUG=0
+      - DEBUG=1
       - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
       - POSTGRES_DB=db_auth
       - POSTGRES_USER=admin
@@ -113,7 +114,7 @@ services:
       - ./middle_earth_inventory/:/code/
       - ./portfolio/db.sqlite3:/code/db.sqlite3
     environment:
-      - DEBUG=0
+      - DEBUG=1
       - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
       - POSTGRES_DB=db_inventory
       - POSTGRES_USER=admin

@@ -10,31 +10,30 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.views.decorators.http import require_http_methods
 
-import middle_earth_app.requests
 from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
 from .decorators import check_if_user_logged_in
-from . import utilities, constants
+from . import requests, shop_view_post, shop_view_get
 from .models import AuthenticatedUserCaste
-from .utilities import decode_access_token
+from .decode import decode_access_token
 
-MIDDLE_EARTH_EQUIPMENTS_END_POINT = constants.MIDDLE_EARTH_EQUIPMENTS_END_POINT
-MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT = constants.MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT
-MIDDLE_EARTH_USERS_ENDPOINT = constants.MIDDLE_EARTH_USERS_ENDPOINT
-MIDDLE_EARTH_USER_REGISTER_END_POINT = constants.MIDDLE_EARTH_USER_REGISTER_END_POINT
-MIDDLE_EARTH_INVENTORY_END_POINT = constants.MIDDLE_EARTH_INVENTORY_PURCHASE_END_POINT
-MIDDLE_EARTH_USER_INVENTORY_END_POINT = constants.MIDDLE_EARTH_USER_INVENTORY_END_POINT
-MIDDLE_EARTH_INVENTORY_PURCHASE_END_POINT = constants.MIDDLE_EARTH_INVENTORY_PURCHASE_END_POINT
-MIDDLE_EARTH_INVENTORY_SELL_END_POINT = constants.MIDDLE_EARTH_INVENTORY_SELL_END_POINT
-AUTH_TOKEN_END_POINT = constants.AUTH_TOKEN_END_POINT
-MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT = constants.MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT
-MIDDLE_EARTH_USER_UPDATE_ENDPOINT = constants.MIDDLE_EARTH_USER_UPDATE_ENDPOINT
+MIDDLE_EARTH_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/items/filter/"
+MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/equipments/"
+MIDDLE_EARTH_USERS_ENDPOINT = "http://middleearthauth:8001/api/users/"
+MIDDLE_EARTH_USER_REGISTER_END_POINT = "http://middleearthauth:8001/api/register/"
+MIDDLE_EARTH_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/inventory/"
+MIDDLE_EARTH_USER_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/inventory/filter/"
+MIDDLE_EARTH_INVENTORY_PURCHASE_END_POINT = "http://middleearthinventory:8003/api/inventory/"
+MIDDLE_EARTH_INVENTORY_SELL_END_POINT = "http://middleearthinventory:8003/api/inventory/id/"
+AUTH_TOKEN_END_POINT = "http://middleearthauth:8001/api/token/"
+MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT = "http://middleearthitems:8002/api/items/"
+MIDDLE_EARTH_USER_UPDATE_ENDPOINT = "http://middleearthauth:8001/api/users/"
 
 
 # Create your views here.
 
 
-def user_can_afford_equipment(user, equipment):
-    return int(user["credit"]) >= (equipment["price"])
+# def user_can_afford_equipment(user, equipment):
+#     return int(user["credit"]) >= (equipment["price"])
 
 
 class HomeView(TemplateView):
@@ -46,66 +45,35 @@ class ShopView(LoginRequiredMixin, View):
 
     @staticmethod
     def get(request):
-        caste = request.user.authenticatedusercaste.caste
-        end_point_for_caste_filtered_equipments = MIDDLE_EARTH_EQUIPMENTS_END_POINT + caste + "/"
-        equipments_from_equipment_api = middle_earth_app.requests.send_get_request(end_point=end_point_for_caste_filtered_equipments)
-        items_from_equipment_api_json = equipments_from_equipment_api.json()
-        return render(request, "middle_earth_app/items.html", {"items": items_from_equipment_api_json})
+        equipment_list = shop_view_get.get_equipments_list(request)
+        return render(request, "middle_earth_app/items.html", {"items": equipment_list})
 
     @staticmethod
     def post(request):
-        purchased_equipment_id = request.POST.get("purchased_equipment_id")
-        end_point_for_equipment = MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT + purchased_equipment_id
-        purchased_equipment_get_request = middle_earth_app.requests.send_get_request(end_point=end_point_for_equipment)
-        purchased_equipment_get_request_json = purchased_equipment_get_request.json()
+        purchased_equipment_get_response = shop_view_post.get_purchased_equipment_from_api(request)
+        purchased_equipment_get_response_json = purchased_equipment_get_response.json()
 
-        user_access_token = request.session.get("access_token")
-        headers = {
-            "Authorization": f"Bearer {user_access_token}"
-        }
-        username = request.user.username
-        end_point_for_user = MIDDLE_EARTH_USERS_ENDPOINT + username + "/"
-        user_get_request = middle_earth_app.requests.send_get_request(end_point=end_point_for_user, headers=headers)
-        user_get_request_json = user_get_request.json()
+        user_get_response = shop_view_post.get_buyer_user_from_api(request)
+        user_get_response_json = user_get_response.json()
 
-        invalid_response_status = 200 > (user_get_request.status_code or
-                                         purchased_equipment_get_request) > 300
-
-        if invalid_response_status:
+        if shop_view_post.invalid_response_status(purchased_equipment_get_response, user_get_response):
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
             return redirect("items")
 
-        if not user_can_afford_equipment(user_get_request_json,
-                                         purchased_equipment_get_request_json):
+        if not shop_view_post.user_can_afford_equipment(user_get_response_json,
+                                                        purchased_equipment_get_response_json):
             messages.warning(request, "Sorry, you can not afford this item. You can sell your item(s) "
                                       "in order to earn credit")
             return redirect("items")
 
-        parameters_for_purchase = {
-            "owner_username": user_get_request_json["username"],
-            "item_id": purchased_equipment_get_request_json["id"],
-            "item_name": purchased_equipment_get_request_json["name"],
-            "item_price": purchased_equipment_get_request_json["price"],
-            "item_description": purchased_equipment_get_request_json["description"],
-            "item_image_url": purchased_equipment_get_request_json["image_url"],
-        }
-        purchase_api_response = middle_earth_app.requests.send_post_request(end_point=MIDDLE_EARTH_INVENTORY_END_POINT,
-                                                                            parameters=parameters_for_purchase,
-                                                                            headers=headers)
-        if purchase_api_response.status_code != 201:
+        purchase_response = shop_view_post.purchase_equipment(request, user_get_response_json,
+                                                              purchased_equipment_get_response_json)
+
+        if purchase_response.status_code != 201:
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
             return redirect("items")
 
-        reduced_credit = user_get_request_json["credit"] - purchased_equipment_get_request_json["price"]
-        parameters_for_update_credit = {
-            "credit": reduced_credit
-        }
-
-        end_point_for_update_user = MIDDLE_EARTH_USER_UPDATE_ENDPOINT + username + "/"
-
-        update_user_credit = middle_earth_app.requests.send_patch_request(end_point=end_point_for_update_user,
-                                                                          parameters=parameters_for_update_credit,
-                                                                          headers=headers)
+        shop_view_post.update_user_credit(request, user_get_response_json, purchased_equipment_get_response_json)
 
         messages.success(request, "You have successfully purchased this equipment!")
         return redirect("items")
@@ -122,8 +90,8 @@ class InventoryView(LoginRequiredMixin, View):
         headers = {
             "Authorization": f"Bearer {user_access_token}"
         }
-        equipments_from_inventory_api = middle_earth_app.requests.send_get_request(end_point=end_point_for_user_filtered_equipments,
-                                                                                   headers=headers)
+        equipments_from_inventory_api = requests.send_get_request(end_point=end_point_for_user_filtered_equipments,
+                                                                  headers=headers)
         items_from_inventory_api_json = equipments_from_inventory_api.json()
         return render(request, "middle_earth_app/inventory.html", {"items": items_from_inventory_api_json})
 
@@ -138,15 +106,15 @@ class InventoryView(LoginRequiredMixin, View):
 
         username = request.user.username
         end_point_for_user = MIDDLE_EARTH_USERS_ENDPOINT + username + "/"
-        user_get_request = middle_earth_app.requests.send_get_request(end_point=end_point_for_user, headers=headers)
+        user_get_request = requests.send_get_request(end_point=end_point_for_user, headers=headers)
         user_get_request_json = user_get_request.json()
 
-        item_to_be_sold_get_request = middle_earth_app.requests.send_get_request(
+        item_to_be_sold_get_request = requests.send_get_request(
             end_point=end_point_for_inventory_id_filtered_inventory,
             headers=headers)
         item_to_be_sold_get_request_json = item_to_be_sold_get_request.json()
 
-        sell_equipment_post_request = middle_earth_app.requests.send_delete_request(
+        sell_equipment_post_request = requests.send_delete_request(
             end_point=end_point_for_inventory_id_filtered_inventory,
             headers=headers)
 
@@ -165,9 +133,9 @@ class InventoryView(LoginRequiredMixin, View):
 
         end_point_for_update_user = MIDDLE_EARTH_USER_UPDATE_ENDPOINT + username + "/"
 
-        update_user_credit = middle_earth_app.requests.send_patch_request(end_point=end_point_for_update_user,
-                                                                          parameters=parameters_for_update_credit,
-                                                                          headers=headers)
+        update_user_credit = requests.send_patch_request(end_point=end_point_for_update_user,
+                                                         parameters=parameters_for_update_credit,
+                                                         headers=headers)
 
         messages.success(request, "You have successfully sold this equipment!")
 
@@ -191,8 +159,8 @@ def register_new_user(request):
             "caste": form.cleaned_data["caste"]
         }
 
-        register_response = middle_earth_app.requests.send_post_request(end_point=MIDDLE_EARTH_USER_REGISTER_END_POINT,
-                                                                        parameters=parameters_for_register)
+        register_response = requests.send_post_request(end_point=MIDDLE_EARTH_USER_REGISTER_END_POINT,
+                                                       parameters=parameters_for_register)
 
         register_response_json = register_response.json()
 
@@ -234,7 +202,7 @@ def login_user(request):
             "password": form.cleaned_data["password"]
         }
 
-        login_response = middle_earth_app.requests.send_post_request(end_point=AUTH_TOKEN_END_POINT, parameters=parameters)
+        login_response = requests.send_post_request(end_point=AUTH_TOKEN_END_POINT, parameters=parameters)
         login_response_json = login_response.json()
 
         if 400 <= login_response.status_code < 500:
@@ -308,9 +276,7 @@ class AddEquipmentsView(View):
                 "image_url": form.cleaned_data["image_url"],
             }
 
-            add_equipment_response = middle_earth_app.requests.send_post_request(end_point=MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT,
-                                                                                 parameters=parameters_for_register)
-
-            print(add_equipment_response)
+            add_equipment_response = requests.send_post_request(end_point=MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT,
+                                                                parameters=parameters_for_register)
 
         return redirect("add_equipment")

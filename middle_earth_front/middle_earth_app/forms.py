@@ -1,4 +1,3 @@
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
 USERNAME_FIELD_ATTRIBUTES = {'placeholder': 'User name', 'class': 'form-control'}
