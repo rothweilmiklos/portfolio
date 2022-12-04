@@ -10,6 +10,8 @@ MESSAGE_FIELD_ATTRIBUTES = {'rows': '5', 'placeholder': 'Enter message...', 'cla
 
 EMAIL_VALIDATOR_MESSAGE = "Please enter a valid email address."
 
+AWS_AUTHENTICATED_EMAIL = "rothweil.miklos@gmail.com"
+
 
 class ContactForm(forms.Form):
     sender_full_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs=FULL_NAME_FIELD_ATTRIBUTES))
@@ -21,9 +23,12 @@ class ContactForm(forms.Form):
 
 class ContactEmail:
     def __init__(self, form: ContactForm):
-        self.email_address = [form.cleaned_data['sender_email']]
+        self.email_address = form.cleaned_data['sender_email']
         self.subject = form.cleaned_data['sender_subject']
-        self.message = form.cleaned_data['sender_message'] + '\n' + form.cleaned_data['sender_full_name']
+        self.message = self.email_address + '\n' \
+                       + form.cleaned_data['sender_message'] + '\n' \
+                       + form.cleaned_data['sender_full_name']
 
     def send_message(self):
-        send_mail(subject=self.subject, message=self.message, recipient_list=self.email_address, from_email=None)
+        send_mail(subject=self.subject, message=self.message, recipient_list=[AWS_AUTHENTICATED_EMAIL],
+                  from_email=AWS_AUTHENTICATED_EMAIL)
