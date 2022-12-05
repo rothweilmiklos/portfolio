@@ -15,6 +15,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from middle_earth_inventory import db_config
+from middle_earth_inventory.secret_key import get_secret_value
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,19 +26,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #       For development, uncomment the line below:
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 #       For production, uncomment the line below:
-# SECRET_KEY = get_secret_value('django_secret_key')
+SECRET_KEY = get_secret_value('inventory_secret_key')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #       For development uncomment the line below:
-DEBUG = 1 == int(os.environ.get('DEBUG'))
+# DEBUG = 1 == int(os.environ.get('DEBUG'))
 
-#     For development uncomment the two lines below:
-# DEBUG_VALUE = 1 == int(get_secret_value('debug'))
-# DEBUG = DEBUG_VALUE
+#     For production uncomment the two lines below:
+DEBUG_VALUE = 1 == int(get_secret_value('debug'))
+DEBUG = DEBUG_VALUE
 
 
 ALLOWED_HOSTS = ['middleearthinventory', '127.0.0.1', 'localhost']
@@ -145,7 +146,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -154,8 +154,12 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'RS256',
-    'SIGNING_KEY': '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwgfSjAgEAAoIBAQCglVyGIV5vluk6wdD5lHwejd0IBzvH7j4bF4h38eP47CgtFvyeq38PET1eS43TijUth5+U9WySObGM7ebApJR2PHQLTlM6D1TZz6/uXUAadiVhDFm06fZrHH0B3MTImiTLemnh1LkYFuuMbDEe77zcs48NaZ441Fkl4GGTS1yVbX23+SoE8f4mKXAJaiD+VmAM9EfyhdqJc4n1V0TTFGHdiLoWLXwmcHmccARBP5pUVI0zTn8KV45DbHw/Q8oRb/+lV6aB44C2EJHEOAzRhconTEGIqLfC1gQas8HBC6UbF6nEJw6vS+sBoIpgB6EVxrwX4g/HvK24J6r58ehyr1ZXAgMBAAECggEAOOmWuCb9bDklAeENKldYwg9vRdgidNJYCowFntUJAgDYoFpkP+vyBSoMAO5wHof+HtvRUB7HUu/FoHf0b1QlFd6JFjS1RH+IiAWWiblc7cPvrXyOEpNU9VNMbquKxrnyznbdLd+RlhsRclwp8Jfw7Jtq2MsU+3ku+0CR9H0iHAb5IDoHSMGUYCVWQEv74G8/1SVBpWiG0VDQHW+F77xK7W7tq2KSwBYys2qqoC63nBiUAYm4Jj6ls5107vFfFvL2DlPOGEDde79960u5OhMcHKFJZY3kDgRVqEiAR2k4NEghCqGWsO6wIEfqINB7jq7cZaDVkZ6bIyrv1D/aORSDoQKBgQC9825iiRTNUVQjA/owOumLtSs+wa1az1Rc4OMiAteJ3WXjldANJPG1MDAejVWfs+13vlfNkmqgH/pqS9lOBsqa5reBfnuaMgiz9qQwEDuQ13zU9tYl4z4iFviZdfk1gZcI33xViw6tRi72TLyRLWCcY0SgeJtHQstvSysj9Aen0QKBgQDYa8WhFjZ5yWgry4QQabftltQECU8iMB+q1ZFtbVwgfjQQSNXPhrbp94Pjr/9dAgfKGb2MpT+xQ1GHNLGhBAWAl9pYZUdSxlOF0cqzSGPCTYNrIKYlVUoNMMwA2QOxdaJiXrmLNWVQs2iO5e6vf+MQgFNgzLLBqkZBiH2fZYdNpwKBgDAdrtOE9+D+ffqUslZvReOe08KE2v3K0Qrp6H8gCysgCwQ4WchKmHOWLko+8PaQZFHVxHYNZbcEArHUXspWDBJq6QcDXBn2HKBBlNub8QrCmxtzH1Hfm0iVWwm8iZEVL4YO3nboz6HyykiXrZh0zykuOB8SDftiHxglCVuFID9RAoGBAInvlpRm/e19SuGu4ss7Njk9yn+QF1mo5mYRnJDsBK3JAhHm+i88o1RXpz31LILxClnrMf50TDYEu++6zAPd9kvRfR6d3mmJci52WgUOfFaY5MvgkUR2Ka5ijYN0zX/Lg+XCjeuF6r8Wuetp7Uj575TS1VF65eu9RO37umVfZm89AoGAKSG4TchNZrNxF8Y5Odz80ZWnEgVKWsZlWIORE/BAeCyUGJAH6OI1dOSAh26BkjXq1NbqU5tVCcQaYEXGK9Da2EV3++92bwjc62603WqWGzApDUNMQZp7jXtpdPMFoaAPttZMfKlj8p9gubGS/wL4ADGHiwZbSegqJQ2psDmNY7c=\n-----END PRIVATE KEY-----',
-    'VERIFYING_KEY': '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoJVchiFeb5bpOsHQ+ZR8Ho3dCAc7x+4+GxeId/Hj+OwoLRb8nqt/DxE9XkuN04o1LYeflPVskjmxjO3mwKSUdjx0C05TOg9U2c+v7l1AGnYlYQxZtOn2axx9AdzEyJoky3pp4dS5GBbrjGwxHu+83LOPDWmeONRZJeBhk0tclW19t/kqBPH+JilwCWog/lZgDPRH8oXaiXOJ9VdE0xRh3Yi6Fi18JnB5nHAEQT+aVFSNM05/CleOQ2x8P0PKEW//pVemgeOAthCRxDgM0YXKJ0xBiKi3wtYEGrPBwQulGxepxCcOr0vrAaCKYAehFca8F+IPx7ytuCeq+fHocq9WVwIDAQAB\n-----END PUBLIC KEY-----',
+    # For development uncomment the two lines below, and comment out the 2 lines below that
+    # 'SIGNING_KEY': '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwgfSjAgEAAoIBAQCglVyGIV5vluk6wdD5lHwejd0IBzvH7j4bF4h38eP47CgtFvyeq38PET1eS43TijUth5+U9WySObGM7ebApJR2PHQLTlM6D1TZz6/uXUAadiVhDFm06fZrHH0B3MTImiTLemnh1LkYFuuMbDEe77zcs48NaZ441Fkl4GGTS1yVbX23+SoE8f4mKXAJaiD+VmAM9EfyhdqJc4n1V0TTFGHdiLoWLXwmcHmccARBP5pUVI0zTn8KV45DbHw/Q8oRb/+lV6aB44C2EJHEOAzRhconTEGIqLfC1gQas8HBC6UbF6nEJw6vS+sBoIpgB6EVxrwX4g/HvK24J6r58ehyr1ZXAgMBAAECggEAOOmWuCb9bDklAeENKldYwg9vRdgidNJYCowFntUJAgDYoFpkP+vyBSoMAO5wHof+HtvRUB7HUu/FoHf0b1QlFd6JFjS1RH+IiAWWiblc7cPvrXyOEpNU9VNMbquKxrnyznbdLd+RlhsRclwp8Jfw7Jtq2MsU+3ku+0CR9H0iHAb5IDoHSMGUYCVWQEv74G8/1SVBpWiG0VDQHW+F77xK7W7tq2KSwBYys2qqoC63nBiUAYm4Jj6ls5107vFfFvL2DlPOGEDde79960u5OhMcHKFJZY3kDgRVqEiAR2k4NEghCqGWsO6wIEfqINB7jq7cZaDVkZ6bIyrv1D/aORSDoQKBgQC9825iiRTNUVQjA/owOumLtSs+wa1az1Rc4OMiAteJ3WXjldANJPG1MDAejVWfs+13vlfNkmqgH/pqS9lOBsqa5reBfnuaMgiz9qQwEDuQ13zU9tYl4z4iFviZdfk1gZcI33xViw6tRi72TLyRLWCcY0SgeJtHQstvSysj9Aen0QKBgQDYa8WhFjZ5yWgry4QQabftltQECU8iMB+q1ZFtbVwgfjQQSNXPhrbp94Pjr/9dAgfKGb2MpT+xQ1GHNLGhBAWAl9pYZUdSxlOF0cqzSGPCTYNrIKYlVUoNMMwA2QOxdaJiXrmLNWVQs2iO5e6vf+MQgFNgzLLBqkZBiH2fZYdNpwKBgDAdrtOE9+D+ffqUslZvReOe08KE2v3K0Qrp6H8gCysgCwQ4WchKmHOWLko+8PaQZFHVxHYNZbcEArHUXspWDBJq6QcDXBn2HKBBlNub8QrCmxtzH1Hfm0iVWwm8iZEVL4YO3nboz6HyykiXrZh0zykuOB8SDftiHxglCVuFID9RAoGBAInvlpRm/e19SuGu4ss7Njk9yn+QF1mo5mYRnJDsBK3JAhHm+i88o1RXpz31LILxClnrMf50TDYEu++6zAPd9kvRfR6d3mmJci52WgUOfFaY5MvgkUR2Ka5ijYN0zX/Lg+XCjeuF6r8Wuetp7Uj575TS1VF65eu9RO37umVfZm89AoGAKSG4TchNZrNxF8Y5Odz80ZWnEgVKWsZlWIORE/BAeCyUGJAH6OI1dOSAh26BkjXq1NbqU5tVCcQaYEXGK9Da2EV3++92bwjc62603WqWGzApDUNMQZp7jXtpdPMFoaAPttZMfKlj8p9gubGS/wL4ADGHiwZbSegqJQ2psDmNY7c=\n-----END PRIVATE KEY-----',
+    # 'VERIFYING_KEY': '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoJVchiFeb5bpOsHQ+ZR8Ho3dCAc7x+4+GxeId/Hj+OwoLRb8nqt/DxE9XkuN04o1LYeflPVskjmxjO3mwKSUdjx0C05TOg9U2c+v7l1AGnYlYQxZtOn2axx9AdzEyJoky3pp4dS5GBbrjGwxHu+83LOPDWmeONRZJeBhk0tclW19t/kqBPH+JilwCWog/lZgDPRH8oXaiXOJ9VdE0xRh3Yi6Fi18JnB5nHAEQT+aVFSNM05/CleOQ2x8P0PKEW//pVemgeOAthCRxDgM0YXKJ0xBiKi3wtYEGrPBwQulGxepxCcOr0vrAaCKYAehFca8F+IPx7ytuCeq+fHocq9WVwIDAQAB\n-----END PUBLIC KEY-----',
+    # # For production uncomment the two lines below, and comment out the 2 lines above
+    'SIGNING_KEY': get_secret_value('signing_key'),
+    'VERIFYING_KEY': get_secret_value('public_key'),
     'AUDIENCE': None,
     'ISSUER': None,
     'JWK_URL': None,

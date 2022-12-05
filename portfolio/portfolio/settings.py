@@ -26,19 +26,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #       For development, uncomment the line below:
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 #       For production, uncomment the line below:
-# SECRET_KEY = get_secret_value('django_secret_key')
+SECRET_KEY = get_secret_value('portfolio_secret_key')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #       For development uncomment the line below:
-DEBUG = 1 == int(os.environ.get('DEBUG'))
+# DEBUG = 1 == int(os.environ.get('DEBUG'))
 
 #     For development uncomment the two lines below:
-# DEBUG_VALUE = 1 == int(get_secret_value('debug'))
-# DEBUG = DEBUG_VALUE
+DEBUG_VALUE = 1 == int(get_secret_value('debug'))
+DEBUG = DEBUG_VALUE
 
 
 ALLOWED_HOSTS = ['192.168.0.106', '127.0.0.1', 'portfolio']
@@ -134,15 +134,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Settings for email module
-
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = '465'
-# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-# DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_SSL = True
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
-AWS_ACCESS_KEY_ID = 'AKIAUWY3QL2642QMND4L'
-AWS_SECRET_ACCESS_KEY = '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'
+# For development uncomment the two lines below, and comment out the 2 lines below that
+# AWS_ACCESS_KEY_ID = 'AKIAUWY3QL2642QMND4L'
+# AWS_SECRET_ACCESS_KEY = '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'
+# For production uncomment the two lines below, and comment out the 2 lines above
+AWS_ACCESS_KEY_ID = get_secret_value('aws_access_key')
+AWS_SECRET_ACCESS_KEY = get_secret_value('aws_secret_key')

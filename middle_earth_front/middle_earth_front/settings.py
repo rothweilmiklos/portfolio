@@ -17,6 +17,7 @@ from pathlib import Path
 from django.contrib.messages import constants
 
 from middle_earth_front import db_config
+from middle_earth_front.secret_key import get_secret_value
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,19 +28,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #       For development, uncomment the line below:
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 #       For production, uncomment the line below:
-# SECRET_KEY = get_secret_value('django_secret_key')
+SECRET_KEY = get_secret_value('front_secret_key')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #       For development uncomment the line below:
-DEBUG = 1 == int(os.environ.get('DEBUG'))
+# DEBUG = 1 == int(os.environ.get('DEBUG'))
 
 #     For development uncomment the two lines below:
-# DEBUG_VALUE = 1 == int(get_secret_value('debug'))
-# DEBUG = DEBUG_VALUE
+DEBUG_VALUE = 1 == int(get_secret_value('debug'))
+DEBUG = DEBUG_VALUE
 
 
 ALLOWED_HOSTS = ['127.0.0.1', 'middleearthfront', 'localhost']
