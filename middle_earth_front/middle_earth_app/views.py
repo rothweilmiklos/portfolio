@@ -189,18 +189,21 @@ def login_user(request):
     return render(request, "middle_earth_app/login.html", {"form": form})
 
 
-@login_required(login_url="login")
-def logout_user(request):
-    session_username_value = request.user.username
-    try:
-        user = User.objects.filter(username=session_username_value)
-    except ObjectDoesNotExist:
-        return redirect("home")
+class LogOutView(LoginRequiredMixin, View):
+    login_url = "login"
 
-    logout(request)
-    user.delete()
-    messages.success(request, "You've logged out successfully!")
-    return redirect("home")
+    @staticmethod
+    def get(request):
+        session_username_value = request.user.username
+        try:
+            user = User.objects.filter(username=session_username_value)
+        except ObjectDoesNotExist:
+            return redirect("home")
+
+        logout(request)
+        user.delete()
+        messages.success(request, "You've logged out successfully!")
+        return redirect("home")
 
 
 class AddEquipmentsView(View):
@@ -224,7 +227,7 @@ class AddEquipmentsView(View):
                 "image_url": form.cleaned_data["image_url"],
             }
 
-            add_equipment_response = requests.send_post_request(end_point=MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT,
-                                                                parameters=parameters_for_register)
+            requests.send_post_request(end_point=MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT,
+                                       parameters=parameters_for_register)
 
         return redirect("add_equipment")
