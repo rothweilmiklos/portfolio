@@ -2,7 +2,7 @@ import functools
 from django.shortcuts import redirect
 
 
-def check_if_user_logged_in(view_func):
+def deny_if_user_logged_in(view_func):
     @functools.wraps(view_func)
     def wrapper(*args, **kwargs):
         request = args[0]
