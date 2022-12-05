@@ -1,5 +1,4 @@
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,13 +7,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views import View
 from django.views.generic import TemplateView
-from django.views.decorators.http import require_http_methods
 
-from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
+from . import requests, shop_view_post, shop_view_get, inventory_view_post, inventory_view_get, register_view_post, \
+    login_view_post
 from .decorators import deny_if_user_logged_in
-from . import requests, shop_view_post, shop_view_get, inventory_view_post, inventory_view_get, register_view_post
-from .models import AuthenticatedUserCaste
-from .decode import decode_access_token
+from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
 
 MIDDLE_EARTH_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/items/filter/"
 MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/equipments/"
@@ -32,10 +29,6 @@ MIDDLE_EARTH_USER_UPDATE_ENDPOINT = "http://middleearthauth:8001/api/users/"
 # Create your views here.
 
 
-# def user_can_afford_equipment(user, equipment):
-#     return int(user["credit"]) >= (equipment["price"])
-
-
 class HomeView(TemplateView):
     template_name = "middle_earth_app/home.html"
 
@@ -46,7 +39,8 @@ class ShopView(LoginRequiredMixin, View):
     @staticmethod
     def get(request):
         equipment_list = shop_view_get.get_equipments_list(request)
-        return render(request, "middle_earth_app/items.html", {"items": equipment_list})
+        user_credit = shop_view_get.get_users_credit(request)
+        return render(request, "middle_earth_app/items.html", {"items": equipment_list, "user_credit": user_credit})
 
     @staticmethod
     def post(request):
@@ -132,61 +126,38 @@ class RegisterView(View):
         return redirect("login")
 
 
-@require_http_methods(["GET", "POST"])
-@deny_if_user_logged_in
-def login_user(request):
-    if request.user.is_authenticated:
-        return redirect("items")
+class LogInView(View):
 
-    if request.method == "POST":
-        form = EntityLoginForm(request.POST)
+    @staticmethod
+    @deny_if_user_logged_in
+    def get(request):
+        form = EntityLoginForm()
+        return render(request, "middle_earth_app/login.html", {"form": form})
 
+    @staticmethod
+    @deny_if_user_logged_in
+    def post(request):
+        form = login_view_post.get_form(request)
         if not form.is_valid():
             messages.error(request, "The credentials you've given are not correct, please try again!")
             return redirect("login")
 
-        parameters = {
-            "username": form.cleaned_data["username"],
-            "password": form.cleaned_data["password"]
-        }
+        get_token_response = login_view_post.get_user_auth_tokens(form)
+        get_token_response_json = get_token_response.json()
 
-        login_response = requests.send_post_request(end_point=AUTH_TOKEN_END_POINT, parameters=parameters)
-        login_response_json = login_response.json()
-
-        if 400 <= login_response.status_code < 500:
-            message = list(login_response_json.values())
-            messages.error(request, message=message[0])
+        if get_token_response.status_code != 200:
+            login_view_post.add_error_messages(request, get_token_response_json)
             return redirect("login")
 
-        elif login_response.status_code == 500:
-            messages.info(request, message="Sorry, something went wrong, please try again later!")
-            return redirect("login")
+        request.session["access_token"] = get_token_response_json["access"].strip()
+        request.session["refresh_token"] = get_token_response_json["refresh"].strip()
 
-        request.session["access_token"] = login_response_json["access"].strip()
-        request.session["refresh_token"] = login_response_json["refresh"].strip()
-        messages.success(request, "You've logged in successfully!")
-
-        try:
-            User.objects.get(username=form.cleaned_data["username"])
-        except ObjectDoesNotExist:
-            user_logging_in = User(username=form.cleaned_data["username"])
-            user_logging_in.set_password(form.cleaned_data["password"])
-            user_logging_in.save()
-
-            decoded_access_token = decode_access_token(request.session["access_token"])
-            caste = decoded_access_token["caste"]
-            user_related_caste_row = AuthenticatedUserCaste.objects.get(user_id=user_logging_in.id)
-            user_related_caste_row.caste = caste
-            user_related_caste_row.save()
-
+        login_view_post.create_user_in_local_database(request, form)
         user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password"])
+        login(request, user)
 
-        if user is not None:
-            login(request, user)
+        messages.success(request, "You've logged in successfully!")
         return redirect("items")
-
-    form = EntityRegistrationForm()
-    return render(request, "middle_earth_app/login.html", {"form": form})
 
 
 class LogOutView(LoginRequiredMixin, View):

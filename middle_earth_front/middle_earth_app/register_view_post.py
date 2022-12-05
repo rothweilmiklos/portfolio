@@ -1,5 +1,5 @@
-from middle_earth_app.forms import EntityRegistrationForm
 from . import requests
+from middle_earth_app.forms import EntityRegistrationForm
 
 
 MIDDLE_EARTH_USER_REGISTER_END_POINT = "http://middleearthauth:8001/api/register/"
@@ -28,5 +28,6 @@ def register(form):
 def add_error_messages_to_form(response_json, form):
     for key, value in response_json.items():
         form.add_error(field=key, error=value)
-
     return form
+
+
