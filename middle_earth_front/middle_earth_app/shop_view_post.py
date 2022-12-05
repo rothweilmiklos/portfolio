@@ -2,6 +2,7 @@ from . import requests
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
+
 MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT = "http://middleearthitems:8002/api/items/"
 MIDDLE_EARTH_USERS_ENDPOINT = "http://middleearthauth:8001/api/users/"
 MIDDLE_EARTH_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/inventory/"

@@ -13,17 +13,8 @@ from . import requests, shop_view_post, shop_view_get, inventory_view_post, inve
 from .decorators import deny_if_user_logged_in
 from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
 
-MIDDLE_EARTH_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/items/filter/"
+
 MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/equipments/"
-MIDDLE_EARTH_USERS_ENDPOINT = "http://middleearthauth:8001/api/users/"
-MIDDLE_EARTH_USER_REGISTER_END_POINT = "http://middleearthauth:8001/api/register/"
-MIDDLE_EARTH_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/inventory/"
-MIDDLE_EARTH_USER_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/inventory/filter/"
-MIDDLE_EARTH_INVENTORY_PURCHASE_END_POINT = "http://middleearthinventory:8003/api/inventory/"
-MIDDLE_EARTH_INVENTORY_SELL_END_POINT = "http://middleearthinventory:8003/api/inventory/id/"
-AUTH_TOKEN_END_POINT = "http://middleearthauth:8001/api/token/"
-MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT = "http://middleearthitems:8002/api/items/"
-MIDDLE_EARTH_USER_UPDATE_ENDPOINT = "http://middleearthauth:8001/api/users/"
 
 
 # Create your views here.
