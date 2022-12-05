@@ -11,8 +11,8 @@ from django.views.generic import TemplateView
 from django.views.decorators.http import require_http_methods
 
 from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
-from .decorators import check_if_user_logged_in
-from . import requests, shop_view_post, shop_view_get, inventory_view_post, inventory_view_get
+from .decorators import deny_if_user_logged_in
+from . import requests, shop_view_post, shop_view_get, inventory_view_post, inventory_view_get, register_view_post
 from .models import AuthenticatedUserCaste
 from .decode import decode_access_token
 
@@ -102,50 +102,38 @@ class InventoryView(LoginRequiredMixin, View):
         return redirect("inventory")
 
 
-@require_http_methods(["GET", "POST"])
-@check_if_user_logged_in
-def register_new_user(request):
-    if request.method == "POST":
-        form = EntityRegistrationForm(request.POST)
+class RegisterView(View):
+
+    @staticmethod
+    @deny_if_user_logged_in
+    def get(request):
+        form = EntityRegistrationForm()
+        return render(request, "middle_earth_app/register.html", {"form": form})
+
+    @staticmethod
+    @deny_if_user_logged_in
+    def post(request):
+        form = register_view_post.get_form(request)
 
         if not form.is_valid():
             messages.error(request, form.errors)
             return redirect("register")
 
-        parameters_for_register = {
-            "username": form.cleaned_data["username"],
-            "password": form.cleaned_data["password"],
-            "password2": form.cleaned_data["password2"],
-            "caste": form.cleaned_data["caste"]
-        }
-
-        register_response = requests.send_post_request(end_point=MIDDLE_EARTH_USER_REGISTER_END_POINT,
-                                                       parameters=parameters_for_register)
-
+        register_response = register_view_post.register(form)
         register_response_json = register_response.json()
 
-        if 400 <= register_response.status_code < 500:
-
-            for key, value in register_response_json.items():
-                form.add_error(field=key, error=value)
-
-            messages.error(request, message=form.errors)
-            return redirect("register")
-
-        elif register_response.status_code == 500:
-            messages.info(request, message="Sorry, something went wrong, please try again later!")
+        if register_response.status_code != 201:
+            error_extended_form = register_view_post.add_error_messages_to_form(register_response_json, form)
+            messages.error(request, message=error_extended_form.errors)
             return redirect("register")
 
         messages.success(request, "Your account has been created successfully!")
 
         return redirect("login")
 
-    form = EntityRegistrationForm()
-    return render(request, "middle_earth_app/register.html", {"form": form})
-
 
 @require_http_methods(["GET", "POST"])
-@check_if_user_logged_in
+@deny_if_user_logged_in
 def login_user(request):
     if request.user.is_authenticated:
         return redirect("items")
