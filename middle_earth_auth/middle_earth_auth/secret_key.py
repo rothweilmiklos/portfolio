@@ -15,4 +15,4 @@ def get_secret_value(key):
             secret_value = secret_value_file[0].strip(' "')
             return secret_value
 
-    return print("This secret does not exist.")
+    return print(f"This secret: {key} does not exist.")
