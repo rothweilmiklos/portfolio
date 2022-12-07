@@ -13,6 +13,6 @@ def get_secret_value(key):
         with open(file_path, "r") as f:
             secret_value_file = f.read().splitlines()
             secret_value = secret_value_file[0].strip(' "')
-            return secret_value
+            return str(secret_value)
 
-    return print("This secret does not exist.")
+    return print(f"This secret: {key} does not exist.")
