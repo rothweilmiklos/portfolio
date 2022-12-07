@@ -1,4 +1,4 @@
-// This function exsist, so that I can get django's csrf token from the cookied to this js file
+// This function exsist, so that I can get django's csrf token from the cookie to this js file
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -40,8 +40,10 @@ function resetFieldColor(arr, absoluteLength){
 
 // I need the code below to make ajax post requests
 $(document).ready(function(){
+    $("#loader").hide();
 
     $('#contact-form').submit(function(e){
+
         e.preventDefault()
 
         var form = $('#contact-form')[0];
@@ -50,6 +52,12 @@ $(document).ready(function(){
         formData.append('csrfmiddlewaretoken', csrftoken)
 
         $.ajax({
+            beforeSend: function(){
+                $("#loader").show()
+            },
+            complete: function(){
+             $("#loader").hide()
+            },
             type: 'POST',
             url: '/',
             data: formData,
@@ -57,10 +65,10 @@ $(document).ready(function(){
             processData: false,
             contentType: false,
             success: function (){
-                 var fieldsArray = ['#id_sender_full_name', '#id_sender_email', '#id_sender_subject', '#id_sender_message'];
-                 $.each(fieldsArray, function(i, element){
+                var fieldsArray = ['#id_sender_full_name', '#id_sender_email', '#id_sender_subject', '#id_sender_message'];
+                $.each(fieldsArray, function(i, element){
                     $(element).css('background-color', '#3E6D9C');
-                 }),
+                }),
                 $('.form-alert').css('display', 'none');
                 form.reset();
                 $('#id_sender_full_name').focus();
@@ -87,7 +95,7 @@ $(document).ready(function(){
                 errorEmpty += giveEmptyMessage(fieldsArray, 4),
                 error = errorEmpty + errorValidator,
                 resetFieldColor(fieldsArray),
-                $('.form-error').html(error)
+                $('.form-error').html(error);
             }
         });
     });
