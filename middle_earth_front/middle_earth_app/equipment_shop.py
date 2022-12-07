@@ -1,5 +1,5 @@
 from . import requests
-from .shop_view_post import get_buyer_user_from_api
+from .purchase_equipment import get_buyer_user_from_api
 
 
 MIDDLE_EARTH_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/items/filter/"

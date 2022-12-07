@@ -1,6 +1,4 @@
 from . import requests
-from django.contrib import messages
-from django.shortcuts import redirect, render
 
 
 MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT = "http://middleearthitems:8002/api/items/"
@@ -35,20 +33,11 @@ def get_buyer_user_from_api(request):
 
 
 def invalid_response_status(equipment_response, user_response):
-    print(equipment_response.status_code, user_response.status_code)
     return 200 > (equipment_response.status_code or user_response.status_code) >= 300
 
 
 def user_can_afford_equipment(user, equipment):
     return int(user["credit"]) >= (equipment["price"])
-
-
-def check_user_can_afford_equipment(request, user_get_response_json, purchased_equipment_get_response_json):
-    if not user_can_afford_equipment(user_get_response_json,
-                                     purchased_equipment_get_response_json):
-        messages.warning(request, "Sorry, you can not afford this item. You can sell your item(s) "
-                                  "in order to earn credit")
-        return redirect("items")
 
 
 def get_parameters_for_purchase(user_get_response_json, purchased_equipment_get_response_json):

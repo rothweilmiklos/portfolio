@@ -1,4 +1,4 @@
-from .shop_view_post import get_headers, get_username
+from .purchase_equipment import get_headers, get_username
 from . import requests
 
 MIDDLE_EARTH_INVENTORY_SELL_END_POINT = "http://middleearthinventory:8003/api/inventory/id/"

@@ -8,8 +8,8 @@ from django.contrib.auth.models import User
 from django.views import View
 from django.views.generic import TemplateView
 
-from . import requests, shop_view_post, shop_view_get, inventory_view_post, inventory_view_get, register_view_post, \
-    login_view_post
+from . import requests, purchase_equipment, equipment_shop, sell_equipment, inventory_equipment, \
+    user_register, user_login
 from .decorators import deny_if_user_logged_in
 from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
 
@@ -29,36 +29,36 @@ class ShopView(LoginRequiredMixin, View):
 
     @staticmethod
     def get(request):
-        equipment_list = shop_view_get.get_equipments_list(request)
-        user_credit = shop_view_get.get_users_credit(request)
+        equipment_list = equipment_shop.get_equipments_list(request)
+        user_credit = equipment_shop.get_users_credit(request)
         return render(request, "middle_earth_app/items.html", {"items": equipment_list, "user_credit": user_credit})
 
     @staticmethod
     def post(request):
-        purchased_equipment_get_response = shop_view_post.get_purchased_equipment_from_api(request)
+        purchased_equipment_get_response = purchase_equipment.get_purchased_equipment_from_api(request)
         purchased_equipment_get_response_json = purchased_equipment_get_response.json()
 
-        user_get_response = shop_view_post.get_buyer_user_from_api(request)
+        user_get_response = purchase_equipment.get_buyer_user_from_api(request)
         user_get_response_json = user_get_response.json()
 
-        if shop_view_post.invalid_response_status(purchased_equipment_get_response, user_get_response):
+        if purchase_equipment.invalid_response_status(purchased_equipment_get_response, user_get_response):
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
             return redirect("items")
 
-        if not shop_view_post.user_can_afford_equipment(user_get_response_json,
+        if not purchase_equipment.user_can_afford_equipment(user_get_response_json,
                                                         purchased_equipment_get_response_json):
             messages.warning(request, "Sorry, you can not afford this item. You can sell your item(s) "
                                       "in order to earn credit")
             return redirect("items")
 
-        purchase_response = shop_view_post.purchase_equipment(request, user_get_response_json,
+        purchase_response = purchase_equipment.purchase_equipment(request, user_get_response_json,
                                                               purchased_equipment_get_response_json)
 
         if purchase_response.status_code != 201:
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
             return redirect("items")
 
-        shop_view_post.update_user_credit(request, user_get_response_json, purchased_equipment_get_response_json)
+        purchase_equipment.update_user_credit(request, user_get_response_json, purchased_equipment_get_response_json)
 
         messages.success(request, "You have successfully purchased this equipment!")
         return redirect("items")
@@ -69,19 +69,19 @@ class InventoryView(LoginRequiredMixin, View):
 
     @staticmethod
     def get(request):
-        user_inventory = inventory_view_get.get_user_inventory(request)
+        user_inventory = inventory_equipment.get_user_inventory(request)
         return render(request, "middle_earth_app/inventory.html", {"items": user_inventory})
 
     @staticmethod
     def post(request):
-        inventory_get_response_json = inventory_view_post.get_sold_inventory_from_api(request)
-        seller_get_response_json = inventory_view_post.get_seller_from_api(request)
+        inventory_get_response_json = sell_equipment.get_sold_inventory_from_api(request)
+        seller_get_response_json = sell_equipment.get_seller_from_api(request)
 
-        if inventory_view_post.sell_inventory(request).status_code != 204:
+        if sell_equipment.sell_inventory(request).status_code != 204:
             messages.error(request, "Sorry, you can not sell this item right now. Please try again later!")
             return redirect("inventory")
 
-        inventory_view_post.update_seller_credit(request, seller_get_response_json, inventory_get_response_json)
+        sell_equipment.update_seller_credit(request, seller_get_response_json, inventory_get_response_json)
 
         messages.success(request, "You have successfully sold this equipment!")
         return redirect("inventory")
@@ -98,17 +98,17 @@ class RegisterView(View):
     @staticmethod
     @deny_if_user_logged_in
     def post(request):
-        form = register_view_post.get_form(request)
+        form = user_register.get_form(request)
 
         if not form.is_valid():
             messages.error(request, form.errors)
             return redirect("register")
 
-        register_response = register_view_post.register(form)
+        register_response = user_register.register(form)
         register_response_json = register_response.json()
 
         if register_response.status_code != 201:
-            error_extended_form = register_view_post.add_error_messages_to_form(register_response_json, form)
+            error_extended_form = user_register.add_error_messages_to_form(register_response_json, form)
             messages.error(request, message=error_extended_form.errors)
             return redirect("register")
 
@@ -128,22 +128,22 @@ class LogInView(View):
     @staticmethod
     @deny_if_user_logged_in
     def post(request):
-        form = login_view_post.get_form(request)
+        form = user_login.get_form(request)
         if not form.is_valid():
             messages.error(request, "The credentials you've given are not correct, please try again!")
             return redirect("login")
 
-        get_token_response = login_view_post.get_user_auth_tokens(form)
+        get_token_response = user_login.get_user_auth_tokens(form)
         get_token_response_json = get_token_response.json()
 
         if get_token_response.status_code != 200:
-            login_view_post.add_error_messages(request, get_token_response_json)
+            user_login.add_error_messages(request, get_token_response_json)
             return redirect("login")
 
         request.session["access_token"] = get_token_response_json["access"].strip()
         request.session["refresh_token"] = get_token_response_json["refresh"].strip()
 
-        login_view_post.create_user_in_local_database(request, form)
+        user_login.create_user_in_local_database(request, form)
         user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password"])
         login(request, user)
 
