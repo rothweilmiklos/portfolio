@@ -8,6 +8,9 @@ services:
     restart: always
     ports:
       - '80:80'
+    depends_on:
+      - portfolio
+      - middleearthfront
     volumes:
       - ./proxy/conf.d/:/etc/nginx/conf.d/
       - portfolio_statics:/portfolio/staticfiles
@@ -36,19 +39,16 @@ services:
 #    environment:
 #      - DEBUG=1
 #      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_DB=portfolio_db
-#      - POSTGRES_USER=admin
 #      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthfront:
     #    for production uncomment the line below:
     image: kcisijohnny/front
     secrets:
-      - front_postgres_db
-      - front_postgres_user
       - front_postgres_password
       - front_secret_key
       - debug
+      - public_key
     #    for development uncomment the line below:
 #    build: middle_earth_front
 #    restart: always
@@ -64,22 +64,18 @@ services:
 #    environment:
 #      - DEBUG=1
 #      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_DB=db_front
-#      - POSTGRES_USER=admin
 #      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthauth:
     #    for production uncomment the line below:
     image: kcisijohnny/auth
     secrets:
-      - auth_postgres_db
-      - auth_postgres_user
       - auth_postgres_password
       - auth_secret_key
       - debug
       - signing_key
       - public_key
-    #    for development uncomment the line below:
+    #    for development uncomment the lines below:
 #    build: middle_earth_auth
 #    restart: always
     ports:
@@ -93,16 +89,12 @@ services:
 #    environment:
 #      - DEBUG=1
 #      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_DB=db_auth
-#      - POSTGRES_USER=admin
 #      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthitems:
     #    for production uncomment the line below:
     image: kcisijohnny/items
     secrets:
-      - items_postgres_db
-      - items_postgres_user
       - items_postgres_password
       - items_secret_key
       - debug
@@ -120,16 +112,12 @@ services:
 #    environment:
 #      - DEBUG=1
 #      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_DB=db_items
-#      - POSTGRES_USER=admin
 #      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthinventory:
     #    for production uncomment the line below:
     image: kcisijohnny/inventory
     secrets:
-      - inventory_postgres_db
-      - inventory_postgres_user
       - inventory_postgres_password
       - inventory_secret_key
       - debug
@@ -149,27 +137,16 @@ services:
 #    environment:
 #      - DEBUG=1
 #      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_DB=db_inventory
-#      - POSTGRES_USER=admin
 #      - POSTGRES_PASSWORD=e5runertuw54u542
 
   db_front:
     image: postgres
     secrets:
-      - front_postgres_db
-      - front_postgres_user
       - front_postgres_password
-    restart: always
-    expose:
-      - "5432"
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_USER=admin
-#      - POSTGRES_DB=market
 #      - POSTGRES_PASSWORD=e5runertuw54u542
-      - POSTGRES_USER_FILE=/run/secrets/front_postgres_user
-      - POSTGRES_DB_FILE=/run/secrets/front_postgres_db
       - POSTGRES_PASSWORD_FILE=/run/secrets/front_postgres_password
     volumes:
       - front_data:/var/lib/postgresql/data
@@ -177,20 +154,11 @@ services:
   db_auth:
     image: postgres
     secrets:
-      - auth_postgres_db
-      - auth_postgres_user
       - auth_postgres_password
-    restart: always
-    expose:
-      - "5432"
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_USER=admin
-#      - POSTGRES_DB=market
 #      - POSTGRES_PASSWORD=e5runertuw54u542
-      - POSTGRES_USER_FILE=/run/secrets/auth_postgres_user
-      - POSTGRES_DB_FILE=/run/secrets/auth_postgres_db
       - POSTGRES_PASSWORD_FILE=/run/secrets/auth_postgres_password
     volumes:
       - auth_data:/var/lib/postgresql/data
@@ -198,20 +166,11 @@ services:
   db_items:
     image: postgres
     secrets:
-      - items_postgres_db
-      - items_postgres_user
       - items_postgres_password
-    restart: always
-    expose:
-      - "5432"
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_USER=admin
-#      - POSTGRES_DB=market
 #      - POSTGRES_PASSWORD=e5runertuw54u542
-      - POSTGRES_USER_FILE=/run/secrets/items_postgres_user
-      - POSTGRES_DB_FILE=/run/secrets/items_postgres_db
       - POSTGRES_PASSWORD_FILE=/run/secrets/items_postgres_password
     volumes:
       - items_data:/var/lib/postgresql/data
@@ -219,23 +178,15 @@ services:
   db_inventory:
     image: postgres
     secrets:
-      - inventory_postgres_db
-      - inventory_postgres_user
       - inventory_postgres_password
-    restart: always
-    expose:
-      - "5432"
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_USER=admin
-#      - POSTGRES_DB=market
 #      - POSTGRES_PASSWORD=e5runertuw54u542
-      - POSTGRES_USER_FILE=/run/secrets/inventory_postgres_user
-      - POSTGRES_DB_FILE=/run/secrets/inventory_postgres_db
       - POSTGRES_PASSWORD_FILE=/run/secrets/inventory_postgres_password
     volumes:
       - inventory_data:/var/lib/postgresql/data
+
 
 networks:
   portfolio_network:
