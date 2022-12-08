@@ -1,6 +1,5 @@
 from . import requests
 
-
 MIDDLE_EARTH_PURCHASED_EQUIPMENT_END_POINT = "http://middleearthitems:8002/api/items/"
 MIDDLE_EARTH_USERS_ENDPOINT = "http://middleearthauth:8001/api/users/"
 MIDDLE_EARTH_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/inventory/"
@@ -33,7 +32,7 @@ def get_buyer_user_from_api(request):
 
 
 def invalid_response_status(equipment_response, user_response):
-    return 200 > (equipment_response.status_code or user_response.status_code) >= 300
+    return equipment_response.status_code != 200 or user_response.status_code != 200
 
 
 def user_can_afford_equipment(user, equipment):
@@ -75,5 +74,3 @@ def update_user_credit(request, user_response, equipment_response):
     requests.send_patch_request(end_point=end_point_for_update_user,
                                 parameters=parameters_for_update_credit,
                                 headers=headers)
-
-

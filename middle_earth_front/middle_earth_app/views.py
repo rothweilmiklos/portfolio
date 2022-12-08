@@ -36,23 +36,23 @@ class ShopView(LoginRequiredMixin, View):
     @staticmethod
     def post(request):
         purchased_equipment_get_response = purchase_equipment.get_purchased_equipment_from_api(request)
-        purchased_equipment_get_response_json = purchased_equipment_get_response.json()
-
         user_get_response = purchase_equipment.get_buyer_user_from_api(request)
-        user_get_response_json = user_get_response.json()
 
         if purchase_equipment.invalid_response_status(purchased_equipment_get_response, user_get_response):
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
             return redirect("items")
 
+        purchased_equipment_get_response_json = purchased_equipment_get_response.json()
+        user_get_response_json = user_get_response.json()
+
         if not purchase_equipment.user_can_afford_equipment(user_get_response_json,
-                                                        purchased_equipment_get_response_json):
+                                                            purchased_equipment_get_response_json):
             messages.warning(request, "Sorry, you can not afford this item. You can sell your item(s) "
                                       "in order to earn credit")
             return redirect("items")
 
         purchase_response = purchase_equipment.purchase_equipment(request, user_get_response_json,
-                                                              purchased_equipment_get_response_json)
+                                                                  purchased_equipment_get_response_json)
 
         if purchase_response.status_code != 201:
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
@@ -74,8 +74,15 @@ class InventoryView(LoginRequiredMixin, View):
 
     @staticmethod
     def post(request):
-        inventory_get_response_json = sell_equipment.get_sold_inventory_from_api(request)
-        seller_get_response_json = sell_equipment.get_seller_from_api(request)
+        inventory_get_response = sell_equipment.get_sold_inventory_from_api(request)
+        seller_get_response = sell_equipment.get_seller_from_api(request)
+
+        if sell_equipment.invalid_response_status(inventory_get_response, seller_get_response):
+            messages.error(request, "Sorry, you can not sell this item right now. Please try again later!")
+            return redirect("inventory")
+
+        inventory_get_response_json = inventory_get_response.json()
+        seller_get_response_json = seller_get_response.json()
 
         if sell_equipment.sell_inventory(request).status_code != 204:
             messages.error(request, "Sorry, you can not sell this item right now. Please try again later!")

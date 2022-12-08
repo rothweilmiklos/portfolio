@@ -28,15 +28,17 @@ def get_end_point_for_username_filtered_update_user(request):
 def get_sold_inventory_from_api(request):
     headers = get_headers(request)
     end_point_for_inventory_id_filtered_inventory = get_end_point_for_id_filtered_inventory(request)
-    response = requests.send_get_request(end_point=end_point_for_inventory_id_filtered_inventory, headers=headers)
-    return response.json()
+    return requests.send_get_request(end_point=end_point_for_inventory_id_filtered_inventory, headers=headers)
 
 
 def get_seller_from_api(request):
     end_point_for_user = get_end_point_for_username_filtered_user(request)
     headers = get_headers(request)
-    response = requests.send_get_request(end_point=end_point_for_user, headers=headers)
-    return response.json()
+    return requests.send_get_request(end_point=end_point_for_user, headers=headers)
+
+
+def invalid_response_status(inventory_response, seller_response):
+    return inventory_response.status_code != 200 or seller_response.status_code != 200
 
 
 def sell_inventory(request):

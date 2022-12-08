@@ -13,4 +13,6 @@ def get_user_inventory(request):
     end_point_for_user_filtered_inventory = get_username_filtered_inventory(request)
     headers = get_headers(request)
     response = requests.send_get_request(end_point=end_point_for_user_filtered_inventory, headers=headers)
-    return response.json()
+    if response.status_code == 200:
+        return response.json()
+
