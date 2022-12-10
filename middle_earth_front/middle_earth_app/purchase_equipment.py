@@ -31,7 +31,7 @@ def get_buyer_user_from_api(request):
     return requests.send_get_request(end_point=end_point_for_user, headers=headers)
 
 
-def invalid_response_status(equipment_response, user_response):
+def check_invalid_response_status(equipment_response, user_response):
     return equipment_response.status_code != 200 or user_response.status_code != 200
 
 

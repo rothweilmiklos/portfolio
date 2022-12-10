@@ -38,7 +38,10 @@ class ShopView(LoginRequiredMixin, View):
         purchased_equipment_get_response = purchase_equipment.get_purchased_equipment_from_api(request)
         user_get_response = purchase_equipment.get_buyer_user_from_api(request)
 
-        if purchase_equipment.invalid_response_status(purchased_equipment_get_response, user_get_response):
+        invalid_response_status = purchase_equipment.check_invalid_response_status(purchased_equipment_get_response,
+                                                                                   user_get_response)
+
+        if invalid_response_status:
             messages.error(request, "Sorry, you can not purchase this item right now. Please try again later!")
             return redirect("items")
 
@@ -77,7 +80,9 @@ class InventoryView(LoginRequiredMixin, View):
         inventory_get_response = sell_equipment.get_sold_inventory_from_api(request)
         seller_get_response = sell_equipment.get_seller_from_api(request)
 
-        if sell_equipment.invalid_response_status(inventory_get_response, seller_get_response):
+        invalid_status_code = sell_equipment.check_invalid_response_status(inventory_get_response, seller_get_response)
+
+        if invalid_status_code:
             messages.error(request, "Sorry, you can not sell this item right now. Please try again later!")
             return redirect("inventory")
 

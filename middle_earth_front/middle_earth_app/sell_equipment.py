@@ -37,7 +37,7 @@ def get_seller_from_api(request):
     return requests.send_get_request(end_point=end_point_for_user, headers=headers)
 
 
-def invalid_response_status(inventory_response, seller_response):
+def check_invalid_response_status(inventory_response, seller_response):
     return inventory_response.status_code != 200 or seller_response.status_code != 200
 
 
