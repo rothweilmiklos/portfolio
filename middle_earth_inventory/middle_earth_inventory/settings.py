@@ -41,7 +41,7 @@ DEBUG_VALUE = 1 == int(get_secret_value('debug'))
 DEBUG = DEBUG_VALUE
 
 
-ALLOWED_HOSTS = ['middleearthinventory', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['middleearthinventory']
 
 
 # Application definition

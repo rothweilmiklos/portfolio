@@ -39,7 +39,7 @@ SECRET_KEY = get_secret_value('items_secret_key')
 DEBUG_VALUE = 1 == int(get_secret_value('debug'))
 DEBUG = DEBUG_VALUE
 
-ALLOWED_HOSTS = ['middleearthitems', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['middleearthitems']
 
 
 # Application definition
