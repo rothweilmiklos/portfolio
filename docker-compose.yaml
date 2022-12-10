@@ -3,9 +3,6 @@ services:
 
   proxy:
     image: kcisijohnny/proxy
-#    build:
-#      context: ./proxy/
-    restart: always
     ports:
       - '80:80'
     depends_on:
@@ -30,7 +27,7 @@ services:
 #    build: portfolio
 #    restart: always
     ports:
-      - '5000:5000'
+      - '5000'
     networks:
       - portfolio_network
     volumes:
@@ -53,7 +50,7 @@ services:
 #    build: middle_earth_front
 #    restart: always
     ports:
-      - '8000:8000'
+      - '8000'
     depends_on:
       - db_front
     networks:
