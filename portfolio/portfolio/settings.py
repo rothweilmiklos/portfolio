@@ -41,7 +41,7 @@ DEBUG_VALUE = 1 == int(get_secret_value('debug'))
 DEBUG = DEBUG_VALUE
 
 
-ALLOWED_HOSTS = ['192.168.0.106', '127.0.0.1', 'portfolio']
+ALLOWED_HOSTS = ['127.0.0.1', 'portfolio', '139.144.176.124', 'rothweilmiklos.hu', 'www.rothweilmiklos.hu']
 
 # Application definition
 
@@ -142,3 +142,5 @@ EMAIL_BACKEND = 'django_ses.SESBackend'
 # For production uncomment the two lines below, and comment out the 2 lines above
 AWS_ACCESS_KEY_ID = get_secret_value('aws_access_key')
 AWS_SECRET_ACCESS_KEY = get_secret_value('aws_secret_key')
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

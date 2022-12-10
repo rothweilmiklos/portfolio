@@ -43,7 +43,7 @@ DEBUG_VALUE = 1 == int(get_secret_value('debug'))
 DEBUG = DEBUG_VALUE
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'middleearthfront', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'middleearthfront', '139.144.176.124', 'rothweilmiklos.hu', 'www.rothweilmiklos.hu']
 
 
 # Application definition
@@ -156,3 +156,5 @@ MESSAGE_TAGS = {
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
