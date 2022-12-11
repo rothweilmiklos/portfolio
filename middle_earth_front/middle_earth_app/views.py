@@ -12,6 +12,7 @@ from . import requests, purchase_equipment, equipment_shop, sell_equipment, inve
     user_register, user_login
 from .decorators import deny_if_user_logged_in
 from .forms import EntityRegistrationForm, EntityLoginForm, AddEquipmentForm
+from .end_points import UserEndPoint, CasteFilteredEquipmentEndPoint
 
 
 MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/equipments/"
@@ -29,9 +30,14 @@ class ShopView(LoginRequiredMixin, View):
 
     @staticmethod
     def get(request):
-        equipment_list = equipment_shop.get_equipments_list(request)
-        user_credit = equipment_shop.get_users_credit(request)
-        return render(request, "middle_earth_app/items.html", {"items": equipment_list, "user_credit": user_credit})
+        equipment_list = requests.GetRequest(request, CasteFilteredEquipmentEndPoint(request), auth=False)
+        user_credit = requests.GetRequest(request, UserEndPoint(request), auth=True)
+
+        if not (equipment_list.validate.error or user_credit.validate.error):
+            return render(request, "middle_earth_app/items.html", {"items": equipment_list, "user_credit": user_credit})
+
+        messages.error(request, message=equipment_list.validate.error_message or user_credit.validate.error_message)
+        return render(request, "middle_earth_app/items.html")
 
     @staticmethod
     def post(request):
