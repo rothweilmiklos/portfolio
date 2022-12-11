@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 
@@ -30,7 +31,6 @@ class Headers:
 
     def get_headers(self):
         user_access_token = self.request.session.get("access_token")
-        print(user_access_token)
         if user_access_token is not None:
             self.headers = {
                 "Authorization": f"Bearer {user_access_token}"
@@ -39,41 +39,42 @@ class Headers:
 
 class GetRequest:
     def __init__(self, request, end_point, auth=False):
-        request.session.get("access_token")
         self.end_point = end_point.end_point
         if auth:
             auth_headers = Headers(request)
             self.headers = auth_headers.headers
         else:
             self.headers = None
+        self.get_response = None
         self.response = None
-        self.validate = ValidateGetRequest()
+        self.validate = ValidateRequest()
         self.send_get_request()
+        self.validate_response_from_get_request()
 
     def send_get_request(self):
-        print(self.headers)
-        self.response = requests.get(url=self.end_point, headers=self.headers)
-        self.validate.validate_get_request(self.response)
-        if self.validate.error:
-            self.response = self.validate.error_message
+        self.get_response = requests.get(url=self.end_point, headers=self.headers)
+
+    def validate_response_from_get_request(self):
+        self.validate.validate_get_request(self.get_response)
+        if not self.validate.error:
+            self.response = self.get_response.json()
 
 
-class ValidateGetRequest:
+class ValidateRequest:
     def __init__(self):
         self.error = False
         self.error_message = None
-        self.errorhandle = ResponseErrorHandle()
+        self.error_handle = ResponseErrorHandle()
 
     def validate_get_request(self, response):
-        if response.ok:
-            return response.json()
-        self.error = True
-        self.error_message = self.errorhandle.handle_error_status_code(response)
+        if not response.ok:
+            self.error = True
+            self.error_message = self.error_handle.handle_error_status_code(response)
 
 
 class ResponseErrorHandle:
     @staticmethod
     def handle_error_status_code(response):
         if response.status_code >= 500:
-            return {"unsuccessful": "You can not do this right now, please try again later!"}
+            return "You can not do this right now, please try again later!"
         return response.json()

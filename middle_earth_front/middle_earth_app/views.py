@@ -34,7 +34,8 @@ class ShopView(LoginRequiredMixin, View):
         user_credit = requests.GetRequest(request, UserEndPoint(request), auth=True)
 
         if not (equipment_list.validate.error or user_credit.validate.error):
-            return render(request, "middle_earth_app/items.html", {"items": equipment_list, "user_credit": user_credit})
+            return render(request, "middle_earth_app/items.html", {"items": equipment_list.response,
+                                                                   "user_credit": user_credit.response["credit"]})
 
         messages.error(request, message=equipment_list.validate.error_message or user_credit.validate.error_message)
         return render(request, "middle_earth_app/items.html")
