@@ -6,7 +6,7 @@
 
 {% block content %}
     <body class="text-center">
-    <form class="form-signin" method="POST" novalidate>
+    <form class="form-signin" method="POST" novalidate onsubmit="register-button.disabled = true; return true;">
 
         {% csrf_token %}
 
@@ -30,7 +30,7 @@
             <h6>Already have an Account?</h6>
             <a class="btn btn-sm btn-secondary" href="{% url 'login' %}">Login</a>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account</button>
+        <button class="btn btn-lg btn-primary btn-block" name="register-button" type="submit">Create Account</button>
     </form>
 </body>
 {% endblock %}
