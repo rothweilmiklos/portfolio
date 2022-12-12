@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, FormView
 from . import decorators
 from .forms import ContactForm, ContactEmail
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -21,3 +21,11 @@ class HomeView(FormView):
     def form_invalid(self, form):
         return JsonResponse({'success': False,
                              'error': form.errors}, status=400)
+
+
+class MiddleEarthProjectView(TemplateView):
+    template_name = "main/middle_earth_project.html"
+
+
+class PortfolioProjectView(TemplateView):
+    template_name = "main/portfolio_project.html"
