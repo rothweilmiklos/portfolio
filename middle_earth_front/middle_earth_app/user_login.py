@@ -23,14 +23,12 @@ def get_parameters_for_login(form):
     return parameters
 
 
-def get_user_auth_tokens(form):
-    parameters = get_parameters_for_login(form)
-    return requests.send_post_request(end_point=AUTH_TOKEN_END_POINT, parameters=parameters)
-
-
 def add_error_messages(request, response_json):
-    for value in response_json.values():
-        messages.add_message(request, messages.ERROR, value)
+    try:
+        for value in response_json.values():
+            messages.add_message(request, messages.ERROR, value)
+    except ValueError:
+        messages.add_message(request, messages.ERROR, response_json)
     return request
 
 

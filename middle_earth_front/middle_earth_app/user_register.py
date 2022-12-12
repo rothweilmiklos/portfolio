@@ -19,12 +19,6 @@ def get_parameters_for_register(form):
     return parameters
 
 
-def register(form):
-    parameters = get_parameters_for_register(form)
-    return requests.send_post_request(end_point=MIDDLE_EARTH_USER_REGISTER_END_POINT,
-                                      parameters=parameters)
-
-
 def add_error_messages_to_form(response_json, form):
     for key, value in response_json.items():
         form.add_error(field=key, error=value)
