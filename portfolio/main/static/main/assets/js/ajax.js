@@ -34,7 +34,6 @@ function giveEmptyMessage(arr, absoluteLength){
 function resetFieldColor(arr, absoluteLength){
     $.each(arr, function(i, element) {
         $(element).css('background-color', '#3E6D9C');
-        console.log(element)
     })
 };
 
