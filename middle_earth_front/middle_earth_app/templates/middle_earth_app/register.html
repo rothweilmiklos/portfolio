@@ -1,36 +1,36 @@
 {% extends 'middle_earth_app/base.html' %}
 
 {% block title %}
-    Middle Earth Market - RegisterPage
+Middle Earth Market - RegisterPage
 {% endblock %}
 
 {% block content %}
-    <body class="text-center">
-    <form class="form-signin" method="POST" novalidate onsubmit="register-button.disabled = true; return true;">
+<body class="text-center">
+<form class="form-signin" method="POST" novalidate onsubmit="register-button.disabled = true; return true;">
 
-        {% csrf_token %}
+    {% csrf_token %}
 
-        <h1 class="h3 mb-3 font-weight-normal">
-            Please Create your Account
-        </h1>
+    <h1 class="h3 mb-3 font-weight-normal">
+        Please Create your Account
+    </h1>
 
-        {{ form.username }}
-        <br>
+    {{ form.username }}
+    <br>
 
-        {{ form.password }}
-        <br>
+    {{ form.password }}
+    <br>
 
-        {{ form.password2 }}
-        <br>
+    {{ form.password2 }}
+    <br>
 
-        {{ form.caste }}
-        <br>
+    {{ form.caste }}
+    <br>
 
-        <div class="checkbox mb-3">
-            <h6>Already have an Account?</h6>
-            <a class="btn btn-sm btn-secondary" href="{% url 'login' %}">Login</a>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" name="register-button" type="submit">Create Account</button>
-    </form>
+    <div class="checkbox mb-3">
+        <h6>Already have an Account?</h6>
+        <a class="btn btn-sm btn-secondary" href="{% url 'login' %}">Login</a>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" name="register-button" type="submit">Create Account</button>
+</form>
 </body>
 {% endblock %}

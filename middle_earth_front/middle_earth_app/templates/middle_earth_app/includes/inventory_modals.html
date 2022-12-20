@@ -2,64 +2,64 @@
 <div class="modal fade" id="Modal-MoreInfo{{ item.item_id }}"
      tabindex="-1"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel">
-          {{ item.item_name }}
-        </h5>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {{ item.item_description }}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-                data-dismiss="modal">Close
-        </button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">
+                    {{ item.item_name }}
+                </h5>
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ item.item_description }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Sell Item -->
 <div class="modal fade" id="Modal-SellConfirm{{ item.item_id }}"
      tabindex="-1"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel">
-            Are you sure you want to sell {{ item.item_name }} ?
-        </h5>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" onsubmit="sell-button.disabled = true; return true;">
-            {% csrf_token %}
-            <h4 class="text-center">
-                {{ item.item_name }} costs ${{ item.item_price }}
-            </h4>
-            <br>
-            <h6 class="text-center">
-                By clicking Sell, you will sell this item from your inventory, and you recieve your credit back
-            </h6>
-            <br>
-            <input type="hidden" name="sold_equipment_id" value="{{ item.id }}">
-            <button type="submit" name="sell-button" class="btn btn-outline-success btn-block">Sell</button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-                data-dismiss="modal">Close
-        </button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">
+                    Are you sure you want to sell {{ item.item_name }} ?
+                </h5>
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" onsubmit="sell-button.disabled = true; return true;">
+                    {% csrf_token %}
+                    <h4 class="text-center">
+                        {{ item.item_name }} costs ${{ item.item_price }}
+                    </h4>
+                    <br>
+                    <h6 class="text-center">
+                        By clicking Sell, you will sell this item from your inventory, and you recieve your credit back
+                    </h6>
+                    <br>
+                    <input type="hidden" name="sold_equipment_id" value="{{ item.id }}">
+                    <button type="submit" name="sell-button" class="btn btn-outline-success btn-block">Sell</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

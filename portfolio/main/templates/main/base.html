@@ -4,43 +4,53 @@
 
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name=viewport content="width=device-width, initial-scale=1">
-        <title>Miklos Rothweil Portfolio</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <title>Miklos Rothweil Portfolio</title>
 
-        <link rel="icon" href="data:;base64,=">
+    <link rel="icon" href="data:;base64,=">
 
-        <!--    CSS links-->
-        <link rel="stylesheet" href="{% static 'main/assets/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'main/assets/css/aos.css' %}">
-        <link rel="stylesheet" href="{% static 'main/assets/css/line-awesome.min.css' %}">
-        <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
-    </head>
+    <!--    CSS links-->
+    <link rel="stylesheet" href="{% static 'main/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/line-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
 
-    <body data-bs-spy="scroll" data-bs-target=".navbar">
+    <!--    Favicon-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'main/assets/images/favicon/apple-touch-icon.webp' %}">
+    <link rel="icon" type="image/webp" sizes="32x32"
+          href="{% static 'main/assets/images/favicon/favicon-32x32.webp' %}">
+    <link rel="icon" type="image/webp" sizes="16x16"
+          href="{% static 'main/assets/images/favicon/favicon-16x16.webp' %}">
+    <link rel="manifest" href="{% static 'main/assets/images/favicon/site.webmanifest' %}">
+</head>
 
-        <div id="content-wrapper">
+<body data-bs-spy="scroll" data-bs-target=".navbar">
 
-            <!--Navbar-->
-            {% include 'main/includes/navbar.html' %}
-            <!--//Navbar-->
+<div id="content-wrapper">
 
-            {% block content %}
-                <!--Unique content for each page-->
-            {% endblock %}
+    {% block navbar %}
+    <!--Unique navbar for each page-->
+    {% endblock %}
 
-            <!-- FOOTER -->
-            {% include 'main/includes/footer.html' %}
-            <!-- //FOOTER -->
+    {% block content %}
+    <!--Unique content for each page-->
+    {% endblock %}
 
-        </div>
+    <!-- FOOTER -->
+    {% include 'main/includes/footer.html' %}
+    <!-- //FOOTER -->
 
-        <!--    Javascript links-->
-        <script src="{% static 'main/assets/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'main/assets/js/aos.js' %}"></script>
-        <script src="{% static 'main/assets/js/main.js' %}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
-    </body>
+</div>
+
+<!--    Javascript links-->
+<script src="{% static 'main/assets/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'main/assets/js/aos.js' %}"></script>
+<script src="{% static 'main/assets/js/main.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+        integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+        async></script>
+</body>
 
 </html>
