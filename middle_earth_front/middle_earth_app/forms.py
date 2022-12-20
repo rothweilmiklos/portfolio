@@ -9,7 +9,6 @@ CASTE_CHOICES = [('WIZARD', 'Wizard'), ('ELF', 'Elf'), ('HUMAN', 'Human'), ('DWA
 EQUIPMENT_NAME_FIELD_ATTRIBUTES = {'placeholder': 'Enter equipment name...', 'class': 'form-control'}
 PRICE_FIELD_ATTRIBUTES = {'placeholder': 'Enter equipment price...', 'class': 'form-control'}
 DESCRIPTION_FIELD_ATTRIBUTES = {'rows': '5', 'placeholder': 'Enter equipment description...', 'class': 'form-control'}
-IMAGE_URL_FIELD_ATTRIBUTES = {'placeholder': 'Enter equipment image url...', 'class': 'form-control'}
 
 
 class EntityRegistrationForm(forms.Form):
@@ -31,4 +30,3 @@ class AddEquipmentForm(forms.Form):
     price = forms.CharField(max_length=128, min_length=3, widget=forms.TextInput(attrs=PRICE_FIELD_ATTRIBUTES))
     description = forms.CharField(max_length=1024, widget=forms.Textarea(attrs=DESCRIPTION_FIELD_ATTRIBUTES))
     wielder_caste = forms.CharField(widget=forms.Select(choices=CASTE_CHOICES, attrs=CASTE_FIELD_ATTRIBUTES))
-    image_url = forms.CharField(max_length=1024, widget=forms.TextInput(attrs=IMAGE_URL_FIELD_ATTRIBUTES))

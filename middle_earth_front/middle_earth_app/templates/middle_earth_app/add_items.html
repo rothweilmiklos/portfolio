@@ -1,35 +1,32 @@
 {% extends 'middle_earth_app/base.html' %}
 
 {% block title %}
-    Middle Earth Market - AddEuqipmentPage
+Middle Earth Market - AddEuqipmentPage
 {% endblock %}
 
 {% block content %}
-    <body class="text-center">
-    <form class="form-signin" method="POST" novalidate>
+<body class="text-center">
+<form class="form-signin" method="POST" novalidate>
 
-        {% csrf_token %}
+    {% csrf_token %}
 
-        <h1 class="h3 mb-3 font-weight-normal">
-            Please Add Equipments
-        </h1>
+    <h1 class="h3 mb-3 font-weight-normal">
+        Please Add Equipments
+    </h1>
 
-        {{ form.name }}
-        <br>
+    {{ form.name }}
+    <br>
 
-        {{ form.price }}
-        <br>
+    {{ form.price }}
+    <br>
 
-        {{ form.description }}
-        <br>
+    {{ form.description }}
+    <br>
 
-        {{ form.wielder_caste }}
-        <br>
+    {{ form.wielder_caste }}
+    <br>
 
-        {{ form.image_url }}
-        <br>
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Create Equipment</button>
-    </form>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Create Equipment</button>
+</form>
 </body>
 {% endblock %}

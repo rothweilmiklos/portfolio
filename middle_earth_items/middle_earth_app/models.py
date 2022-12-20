@@ -12,7 +12,6 @@ class Equipments(models.Model):
     price = models.IntegerField()
     description = models.CharField(max_length=1024)
     wielder_caste = models.CharField(max_length=6, choices=CASTE_CHOICES)
-    image_url = models.CharField(max_length=1024)
 
     class Meta:
         ordering = ['id']
