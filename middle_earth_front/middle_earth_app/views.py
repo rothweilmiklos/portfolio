@@ -74,7 +74,7 @@ class ShopView(LoginRequiredMixin, View):
 
         purchase_equipment.update_user_credit(request, user_api_json, purchased_equipment_api_json)
         messages.success(request, "You have successfully purchased this equipment!")
-        return redirect("items")
+        return redirect("thank_you", act="purchased", name=purchased_equipment_api_json["name"])
 
 
 class InventoryView(LoginRequiredMixin, View):
@@ -110,7 +110,17 @@ class InventoryView(LoginRequiredMixin, View):
 
         sell_equipment.update_seller_credit(request, seller_api_json, sold_inventory_api_json)
         messages.success(request, "You have successfully sold this equipment!")
-        return redirect("inventory")
+        return redirect("thank_you", act="sold", name=sold_inventory_api_json["item_name"])
+
+
+class ThankYouView(LoginRequiredMixin, View):
+    login_url = "login"
+
+    @staticmethod
+    def get(request, act, name):
+        return render(request,
+                      template_name="middle_earth_app/thank_you.html",
+                      context={"action": act, "item_name": name})
 
 
 class RegisterView(View):
@@ -220,7 +230,6 @@ class AddEquipmentsView(View):
                 "price": form.cleaned_data["price"],
                 "description": form.cleaned_data["description"],
                 "wielder_caste": form.cleaned_data["wielder_caste"],
-                "image_url": form.cleaned_data["image_url"],
             }
 
             requests.PostRequest(request,

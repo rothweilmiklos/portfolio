@@ -17,8 +17,7 @@ def get_parameters_for_purchase(user_get_response_json, purchased_equipment_get_
         "item_id": purchased_equipment_get_response_json["id"],
         "item_name": purchased_equipment_get_response_json["name"],
         "item_price": purchased_equipment_get_response_json["price"],
-        "item_description": purchased_equipment_get_response_json["description"],
-        "item_image_url": purchased_equipment_get_response_json["image_url"],
+        "item_description": purchased_equipment_get_response_json["description"]
     }
     return parameters_for_purchase
 

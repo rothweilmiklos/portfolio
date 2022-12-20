@@ -21,7 +21,6 @@ from middle_earth_front.secret_key import get_secret_value
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -33,7 +32,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #       For production, uncomment the line below:
 SECRET_KEY = get_secret_value('front_secret_key')
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 #       For development uncomment the line below:
 # DEBUG = 1 == int(os.environ.get('DEBUG'))
@@ -42,9 +40,7 @@ SECRET_KEY = get_secret_value('front_secret_key')
 DEBUG_VALUE = 1 == int(get_secret_value('debug'))
 DEBUG = DEBUG_VALUE
 
-
 ALLOWED_HOSTS = ['127.0.0.1', 'middleearthfront', '139.144.176.124', 'rothweilmiklos.hu', 'www.rothweilmiklos.hu']
-
 
 # Application definition
 
@@ -89,7 +85,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'middle_earth_front.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -98,7 +93,6 @@ DATABASE = db_config.dev_or_prod_db(debug=DEBUG, base_directory=BASE_DIR)
 DATABASES = {
     'default': DATABASE
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -118,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -129,7 +122,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -145,16 +137,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_DOMAIN = '.rothweilmiklos.hu'
 
 MESSAGE_TAGS = {
-        constants.DEBUG: 'alert-secondary',
-        constants.INFO: 'alert-info',
-        constants.SUCCESS: 'alert-success',
-        constants.WARNING: 'alert-warning',
-        constants.ERROR: 'alert-danger',
+    constants.DEBUG: 'alert-secondary',
+    constants.INFO: 'alert-info',
+    constants.SUCCESS: 'alert-success',
+    constants.WARNING: 'alert-warning',
+    constants.ERROR: 'alert-danger',
 }
 
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
-
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
