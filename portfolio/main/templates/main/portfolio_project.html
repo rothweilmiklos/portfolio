@@ -1,1 +1,130 @@
 {% extends 'main/base.html' %}
+
+{% block navbar %}
+{% include 'main/includes/navbar_project.html' %}
+{% endblock %}
+
+{% block content %}
+<!--Description-->
+<section id="description" class="full-height px-lg-5">
+    <div class="container">
+        <div class="row pb-4" data-aos="fade-up">
+            <div class="col-lg-8">
+                <h1>Middle Earth Market</h1>
+            </div>
+        </div>
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="500">
+            <div class="col-lg-12">
+                <h4>Description</h4>
+            </div>
+        </div>
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="700">
+            <div class="card-custom rounded-4 bg-base shadow-effect">
+                <div class="card-custom-content p-4">
+                    <p>This project is basically deploying my portfolio web page and Middle Earth Market.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--//Description-->
+<!--Technical brief-->
+<section id="technical-brief" class="full-height px-lg-5">
+    <div class="container">
+        <div class="row pb-4" data-aos="fade-up" d>
+            <div class="col-lg-12">
+                <h4>Technical brief</h4>
+            </div>
+        </div>
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card-custom rounded-4 bg-base shadow-effect">
+                <div class="card-custom-content p-4">
+                    <p>First off, I’ve used Docker and Docker Compose to host my different services, such as:</p>
+                    <ul>
+                        <li>
+                            <p>Nginx revers proxy, which is also my web server</p>
+                        </li>
+                        <li>
+                            <p>The portfolio app, which is for my main page, and the project descriptions pages</p>
+                        </li>
+                        <li>
+                            <p>The four services for the Middle Earth Market app</p>
+                        </li>
+                        <li>
+                            <p>The four databases for each Middle Earth Service</p>
+                        </li>
+                    </ul>
+                    <p>As I’ve read the docker documentation, I found that the safest way to pass each container their
+                        sensitive data, was docker secrets, so I used it. For this I had to use Docker stack as on
+                        orchestrator. In order for my applications to get hold of the secrets (for example Django
+                        secret key, Signing/Validator key), I made a function that reads in the files, holding the
+                        secret.</p>
+                    <p>Nginx is listening on port 80 and redirects calls to an https virtual server. This server then
+                        forwards the client request to my gunicorn wsgi servers, depending on the url. The gunicorn
+                        servers are there to communicate between nginx and the Django web applications. Also nginx
+                        serves the static files for the applications.</p>
+                    <p>On the main portfolio page I made a contact section which communicates with the backend via ajax
+                        calls. I wrote a javascript file that sends the post request via ajax and also writes out error
+                        messages above the contact form upon receiving one from the backend. The Django app after
+                        receiving this request validates the form and if valid, sends an email via Amazon Simple Email
+                        Service to my email address.</p>
+                    <p>I’ve hosted my web pages on linode shared server. After purchasing a server (Nanode 1 GB), I’ve
+                        downloaded my docker images from Docker hub, and also the docker-compose.yaml and nginx
+                        default.conf file from github. I’ve also added the necessary secrets for the services to run.
+                        After all these I was able to spin up my composition with docker stack. As written in Linode’s
+                        documentation to give security to my server, I’ve installed ufw (uncomplicated fire wall), by
+                        which I allow communication only on certain ports, and deny the rest. Also I’ve created a sudo
+                        user which has reduced permissions, and disabled root user.</p>
+                    <p>I’ve also purchased a custom domain with .hu top level domain from Rackhost. Here all I had to do
+                        is to create a domain on linode with the same name, and connect my rackhost domain nameservers
+                        to the ones provided on linode. This allowed me to manage my domain from linode. For convenience
+                        purposes I gave an A record as “rothweilmiklos.hu” and a CNAME record as www so now my website
+                        can be accessed both with and without www.</p>
+                    <p>To have an ssl certificate, I’ve used Let’s encrypt free service which provided me an ssl
+                        certificate and a private key.</p>
+                    <p>A little extra: On the main portfolio page I made a contact section which communicates with the
+                        backend via ajax calls. I wrote a javascript file that sends the post request via ajax and also
+                        writes out error messages above the contact form upon receiving one from the backend. The Django
+                        app after receiving this request validates the form and if valid, sends an email via Amazon
+                        Simple Email Service to my email address.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--//Technical brief-->
+<!--Improve-->
+<section id="improve" class="full-height px-lg-5">
+    <div class="container">
+        <div class="row pb-4" data-aos="fade-up" d>
+            <div class="col-lg-12">
+                <h4>What I want to improve</h4>
+            </div>
+        </div>
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card-custom rounded-4 bg-base shadow-effect">
+                <div class="card-custom-content p-4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul>
+                                <li>
+                                    <p>I do realize my architecture is not the most efficient, especially in the market
+                                        project, where the front-end and business logic is done in the same service. I
+                                        want to further investigate how a proper microservices structure is built and
+                                        implement it there.</p>
+                                </li>
+                                <li>
+                                    <p>I had fun with javascript (JQuery) while coding the AJAX post function and also
+                                        creating visual elements (like the loading spinner when sending a contact
+                                        email), so I would like to go deeper in understanding this language.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--//Improve-->
+{% endblock %}
