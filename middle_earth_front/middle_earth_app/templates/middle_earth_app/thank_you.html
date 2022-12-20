@@ -1,0 +1,20 @@
+{% extends 'middle_earth_app/base.html' %}
+
+{% block title %}
+Middle Earth Market - ThankYouPage
+{% endblock %}
+
+{% block pageheader %}
+<div class="position-relative overflow-hidden text-center bg-light">
+    <div class="col-md-5 p-lg-5 mx-auto ">
+        <h1 class="display-4 font-weight-normal">Thank you!</h1>
+        <h3 class="display-4 font-weight-normal">You have successfully {{ action }} this item: {{ item_name }}!</h3>
+        {% if action == 'purchased' %}
+        <a class="btn btn-primary" href="{% url 'items' %}">Back to shop</a>
+        {% else %}
+        <a class="btn btn-primary" href="{% url 'inventory' %}">Back to inventory</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
