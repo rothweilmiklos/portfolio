@@ -1,0 +1,1 @@
+{"name":"","short_name":"","icons":[{"src":"{% static 'middle_earth_app/assets/images/favicon/android-chrome-192x192.webp' %}","sizes":"192x192","type":"image/webp"},{"src":"{% static 'middle_earth_app/assets/images/favicon/android-chrome-512x512.webp' %}","sizes":"512x512","type":"image/webp"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
