@@ -9,6 +9,7 @@ MIDDLE_EARTH_USER_INVENTORY_END_POINT = "http://middleearthinventory:8003/api/in
 MIDDLE_EARTH_USER_REGISTER_END_POINT = "http://middleearthauth:8001/api/register/"
 AUTH_TOKEN_END_POINT = "http://middleearthauth:8001/api/token/"
 MIDDLE_EARTH_ADD_EQUIPMENTS_END_POINT = "http://middleearthitems:8002/api/equipments/"
+REFRESH_TOKEN_ENDPOINT = "http://middleearthauth:8001/api/token/refresh/"
 
 
 class EndPoint(ABC):
@@ -104,7 +105,7 @@ class TokenEndPoint(EndPoint):
         self.get_end_point()
 
     def get_end_point(self):
-        self.base_endpoint = self.base_endpoint
+        self.end_point = self.base_endpoint
 
 
 class AddEquipmentEndPoint(EndPoint):
@@ -114,4 +115,14 @@ class AddEquipmentEndPoint(EndPoint):
         self.get_end_point()
 
     def get_end_point(self):
-        self.base_endpoint = self.base_endpoint
+        self.end_point = self.base_endpoint
+
+
+class RefreshTokenEndPoint(EndPoint):
+    def __init__(self):
+        self.base_endpoint = REFRESH_TOKEN_ENDPOINT
+        self.end_point = None
+        self.get_end_point()
+
+    def get_end_point(self):
+        self.end_point = self.base_endpoint

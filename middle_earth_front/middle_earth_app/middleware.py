@@ -5,9 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import middle_earth_app.requests
 from . import decode
-
-
-REFRESH_TOKEN_ENDPOINT = "http://middleearthauth:8001/api/token/refresh/"
+from .end_points import RefreshTokenEndPoint
 
 
 def return_response_without_further_modification(request, get_response):
@@ -16,7 +14,7 @@ def return_response_without_further_modification(request, get_response):
 
 
 def save_new_access_token(request, response):
-    request.session["access_token"] = response.json()["access"]
+    request.session["access_token"] = response["access"]
 
 
 def log_out_user(request):
@@ -29,18 +27,16 @@ def log_out_user(request):
     return request
 
 
-def check_valid_new_token(request, response):
-    if response.status_code == 200:
-        save_new_access_token(request, response)
-    else:
-        log_out_user(request)
-    return request
-
-
 def try_refresh_token(request, refresh_token):
     parameter = {"refresh": refresh_token}
-    refresh_token_response = middle_earth_app.requests.send_post_request(end_point=REFRESH_TOKEN_ENDPOINT, parameters=parameter)
-    check_valid_new_token(request, refresh_token_response)
+    refresh_token_api = middle_earth_app.requests.PostRequest(request,
+                                                              end_point=RefreshTokenEndPoint(),
+                                                              parameters=parameter,
+                                                              auth=False)
+    if refresh_token_api.validate.error:
+        log_out_user(request)
+    else:
+        save_new_access_token(request, refresh_token_api.response)
     return request
 
 
