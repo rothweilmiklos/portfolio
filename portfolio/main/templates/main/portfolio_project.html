@@ -21,7 +21,7 @@
         <div class="row pb-4" data-aos="fade-up" data-aos-delay="700">
             <div class="card-custom rounded-4 bg-base shadow-effect">
                 <div class="card-custom-content p-4">
-                    <p>This project is basically deploying my portfolio web page and Middle Earth Market.</p>
+                    <p>This project is basically about deploying my portfolio website and Middle Earth Market.</p>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
         <div class="row pb-4" data-aos="fade-up" data-aos-delay="300">
             <div class="card-custom rounded-4 bg-base shadow-effect">
                 <div class="card-custom-content p-4">
-                    <p>First off, I’ve used Docker and Docker Compose to host my different services, such as:</p>
+                    <p>First of all, I’ve used Docker and Docker Compose to host my different services, such as:</p>
                     <ul>
                         <li>
                             <p>Nginx revers proxy, which is also my web server</p>
@@ -54,36 +54,32 @@
                             <p>The four databases for each Middle Earth Service</p>
                         </li>
                     </ul>
-                    <p>As I’ve read the docker documentation, I found that the safest way to pass each container their
-                        sensitive data, was docker secrets, so I used it. For this I had to use Docker stack as on
-                        orchestrator. In order for my applications to get hold of the secrets (for example Django
-                        secret key, Signing/Validator key), I made a function that reads in the files, holding the
+                    <p>As I’ve read the Docker documentation, I found that the most secure way to pass each container
+                        their
+                        sensitive data, was Docker Secrets, so I used it. For this, I had to use Docker Swarm as an
+                        orchestrator. In order for my applications to have access to the secrets (for example, Django
+                        secret key, Signing/Validator key), I created a function that reads in the files, containing the
                         secret.</p>
-                    <p>Nginx is listening on port 80 and redirects calls to an https virtual server. This server then
+                    <p>Nginx listens on port 80 and redirects calls to a https virtual server. This server then
                         forwards the client request to my gunicorn wsgi servers, depending on the url. The gunicorn
-                        servers are there to communicate between nginx and the Django web applications. Also nginx
-                        serves the static files for the applications.</p>
-                    <p>On the main portfolio page I made a contact section which communicates with the backend via ajax
-                        calls. I wrote a javascript file that sends the post request via ajax and also writes out error
-                        messages above the contact form upon receiving one from the backend. The Django app after
-                        receiving this request validates the form and if valid, sends an email via Amazon Simple Email
-                        Service to my email address.</p>
-                    <p>I’ve hosted my web pages on linode shared server. After purchasing a server (Nanode 1 GB), I’ve
-                        downloaded my docker images from Docker hub, and also the docker-compose.yaml and nginx
-                        default.conf file from github. I’ve also added the necessary secrets for the services to run.
-                        After all these I was able to spin up my composition with docker stack. As written in Linode’s
-                        documentation to give security to my server, I’ve installed ufw (uncomplicated fire wall), by
-                        which I allow communication only on certain ports, and deny the rest. Also I’ve created a sudo
-                        user which has reduced permissions, and disabled root user.</p>
-                    <p>I’ve also purchased a custom domain with .hu top level domain from Rackhost. Here all I had to do
-                        is to create a domain on linode with the same name, and connect my rackhost domain nameservers
-                        to the ones provided on linode. This allowed me to manage my domain from linode. For convenience
-                        purposes I gave an A record as “rothweilmiklos.hu” and a CNAME record as www so now my website
-                        can be accessed both with and without www.</p>
-                    <p>To have an ssl certificate, I’ve used Let’s encrypt free service which provided me an ssl
+                        servers are responsible for communication between nginx and the Django web applications. Also,
+                        nginx serves the static files for the applications.</p>
+                    <p>I have hosted my website on a Linode shared server. After purchasing a server (Nanode 1 GB), I
+                        have downloaded my docker images from Docker hub, and also the docker-compose.yaml and nginx
+                        default.conf file from GitHub. I have also added the necessary secrets for the services to run.
+                        After all these steps I was able to spin up my composition with Docker stack. As written in
+                        Linode’s documentation to give security to my server, I have installed ufw (uncomplicated fire
+                        wall), through which I allow communication only on certain ports, and deny the rest. Also, I
+                        have created a sudo user which has reduced permissions, and disabled root user.</p>
+                    <p>I have also purchased a custom domain with .hu top-level domain from Rackhost. Here all I had to
+                        do is to create a domain on Linode with the same name, and connect my rackhost domain
+                        nameservers to the ones provided on linode. This allowed me to manage my domain from linode. For
+                        the sake of simplicity I gave an A record as “rothweilmiklos.hu” and a CNAME record as www so now
+                        my website can be accessed both with and without www.</p>
+                    <p>To have a ssl certificate, I have used Let’s encrypt free service which provided me a ssl
                         certificate and a private key.</p>
-                    <p>A little extra: On the main portfolio page I made a contact section which communicates with the
-                        backend via ajax calls. I wrote a javascript file that sends the post request via ajax and also
+                    <p>A little extra: On the main portfolio page I have set up a contact section which communicates with the
+                        server via ajax calls. I wrote a javascript file that sends the post request via ajax and also
                         writes out error messages above the contact form upon receiving one from the backend. The Django
                         app after receiving this request validates the form and if valid, sends an email via Amazon
                         Simple Email Service to my email address.</p>
@@ -108,9 +104,9 @@
                         <div class="col-lg-12">
                             <ul>
                                 <li>
-                                    <p>I do realize my architecture is not the most efficient, especially in the market
+                                    <p>I do realize that architecture is not the most efficient, especially in the market
                                         project, where the front-end and business logic is done in the same service. I
-                                        want to further investigate how a proper microservices structure is built and
+                                        want to further explore how a proper microservices structure is built and
                                         implement it there.</p>
                                 </li>
                                 <li>
