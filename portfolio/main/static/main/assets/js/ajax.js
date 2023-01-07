@@ -45,6 +45,8 @@ $(document).ready(function(){
 
         e.preventDefault()
 
+        $('#btnSubmit').prop('disabled', true);
+
         var form = $('#contact-form')[0];
         var formData = new FormData(form);
         const csrftoken = getCookie('csrftoken');
@@ -56,6 +58,7 @@ $(document).ready(function(){
             },
             complete: function(){
              $("#loader").hide()
+             $('#btnSubmit').prop('disabled', false);
             },
             type: 'POST',
             url: '/',

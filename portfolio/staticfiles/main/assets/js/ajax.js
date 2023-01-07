@@ -34,7 +34,6 @@ function giveEmptyMessage(arr, absoluteLength){
 function resetFieldColor(arr, absoluteLength){
     $.each(arr, function(i, element) {
         $(element).css('background-color', '#3E6D9C');
-        console.log(element)
     })
 };
 
@@ -45,6 +44,8 @@ $(document).ready(function(){
     $('#contact-form').submit(function(e){
 
         e.preventDefault()
+
+        $('#btnSubmit').prop('disabled', true);
 
         var form = $('#contact-form')[0];
         var formData = new FormData(form);
@@ -57,6 +58,7 @@ $(document).ready(function(){
             },
             complete: function(){
              $("#loader").hide()
+             $('#btnSubmit').prop('disabled', false);
             },
             type: 'POST',
             url: '/',
