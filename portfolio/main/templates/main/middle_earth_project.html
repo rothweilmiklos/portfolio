@@ -35,11 +35,11 @@
                 <div class="card-custom-content p-4">
                     <p>This project is a mock web shop for characters from Lord of the Rings.</p>
                     <p>A user has to register first, and after a successful registration can log in.</p>
-                    <p>If logged in, user can purchase equipments depending on their registered caste. In the shop page,
+                    <p>Once logged in, the user can purchase equipments depending on their registered caste. In the shop page,
                         one can see their credit, and if they spent all their credits, they can redeem it by selling
                         equipments from the inventory page.</p>
                     <p>Despite the uniqueness of the equipments, it is possible to buy the same item multiple times, I
-                        saw no reason not to.</p>
+                        saw no reason not to do so.</p>
                 </div>
             </div>
         </div>
@@ -57,31 +57,31 @@
         <div class="row pb-4" data-aos="fade-up" data-aos-delay="300">
             <div class="card-custom rounded-4 bg-base shadow-effect">
                 <div class="card-custom-content p-4">
-                    <p>With this project my goal was to create a web app with micro services architecture or something
-                        similar to it. </p>
+                    <p>With this project my goal was to create a web app based on microservices architecture.</p>
                     <p>There is a front service, which receives the requests from the web pages, makes api calls to
                         relevant services, and handles the business logic.</p>
-                    <p>There are three api services: user, items and inventory. Each api service connected to its own
+                    <p>There are three api services: user, items and inventory. Each api service is connected to its own
                         postgresql database service.</p>
-                    <p>The user service stores the registered users, authenticate them and produces authentication
-                        tokens, since the authentication between the front and the api services are done with JWT (JSON
+                    <p>The user service stores the registered users, authenticates them and produces authentication
+                        tokens, since the authentication between the front and the API services is done with JWT (JSON
                         Web Token).</p>
-                    <p>The items service holds the equipments, and depending on the api call, responds with all the
-                        caste filtered equipments , or the one being purchased/sold.</p>
-                    <p>The inventory service keeps track of purchased equipments, by saving each purchase transaction in
-                        its dedicated database. Depending on the api call, it responds with the user’s equipments, or
+                    <p>The items service stores the equipments, and depending on the api call, responds with all the
+                        caste filtered equipment, or the one being purchased/sold.</p>
+                    <p>The inventory service keeps track of the purchased equipments, by saving each purchase
+                        transaction in
+                        its dedicated database. Depending on the API call, it responds with the user’s equipments, or
                         deletes them upon selling the equipment.</p>
-                    <p>The biggest challenge was to find a way to authenticate between the front and the api services.
+                    <p>The biggest challenge was finding a way to authenticate between the front and the API services.
                         Fortunately there is a package called SimpleJWT which is dedicated for Django Rest Framework.
                         Using asymmetric RSA signing and verification, I’ve created a signing- and a verification key in
                         the authentication service, and I passed the verification key, to the inventory service. </p>
-                    <p>This way, each user specific api call to the authentication or the inventory service is
-                        authenticated with the user’s access token againts the verifying key</p>
-                    <p>To make further sense, I have to mention, that at each login, the user requests an access and a
-                        refresh token from the authentication api, and stores them in a session cookie (which is
+                    <p>This way, each user-specific API call to the authentication or the inventory service is
+                        authenticated with the user’s access token against the verification key</p>
+                    <p>To make further sense, I need to mention, that at each login, the user requests an access and a
+                        refresh token from the authentication API, and stores them in a session cookie (which is
                         encrypted and stored in the client’s browser). Whenever the user uses the application, the
                         access token is validated against expiration and if expired, requests a new token via the
-                        refresh token from the authentication service. For this process I’ve created a middleware
+                        refresh token from the authentication service. For this process I created a middleware
                         function that is run at each client request.</p>
                 </div>
             </div>
@@ -104,16 +104,16 @@
                         <div class="col-lg-12">
                             <ul>
                                 <li>
-                                    <p>I am quite far behind in the testing “department” which I realize now is a
+                                    <p>I am quite far behind in the testing “department” which I now realize is a
                                         terrible practice. After looking into unit testing, especially django’s test
-                                        package(based on python’s unittest) I feel confident I will improve in this
+                                        package(based on python’s unittest) I am confident I will improve in this
                                         field fairly quickly.</p>
                                 </li>
                                 <li>
                                     <p>Clean code: In middle_earth_project/middle_earth_app the requests.py module I
                                         have created classes for different types of requests, which are coupled to other
-                                        classes. After looking into clean code principles, especially SOLID, now I
-                                        realize I can decouple these classes by dependency injection and dependency
+                                        classes. After looking into clean code principles, especially SOLID, it is now
+                                        clear I can decouple these classes by dependency injection and dependency
                                         inversion (making testing easier).</p>
                                 </li>
                                 <li>
