@@ -12,20 +12,31 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+from .secret_key import get_secret_value
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4rfswd=+4p60oxh56a@zvg5we_^f+*k93z#^$&k@hid@fu9g^p'
+#       For development, uncomment the line below:
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+
+#       For production, uncomment the line below:
+SECRET_KEY = get_secret_value('random_apis_secret_key')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#       For development uncomment the line below:
+# DEBUG = 1 == int(os.environ.get('DEBUG'))
 
-ALLOWED_HOSTS = []
+#     For development uncomment the two lines below:
+DEBUG_VALUE = 1 == int(get_secret_value('debug'))
+DEBUG = DEBUG_VALUE
+
+ALLOWED_HOSTS = ['127.0.0.1', 'randomapis', '139.144.176.124', 'rothweilmiklos.hu', 'www.rothweilmiklos.hu']
 
 
 # Application definition
@@ -37,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main.apps.MainConfig'
+    'main.apps.MainConfig',
 ]
 
 MIDDLEWARE = [
@@ -116,9 +127,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/portfolio/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
