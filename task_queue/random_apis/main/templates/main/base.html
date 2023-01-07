@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<!--{% load static %}-->
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <title>Random APIs</title>
+
+    <link rel="icon" href="data:;base64,=">
+
+    <!--    CSS links-->
+    <link rel="stylesheet" href="{% static 'main/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/line-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+
+    <!--    Favicon-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'main/assets/images/favicon/apple-touch-icon.webp' %}">
+    <link rel="icon" type="image/webp" sizes="32x32"
+          href="{% static 'main/assets/images/favicon/favicon-32x32.webp' %}">
+    <link rel="icon" type="image/webp" sizes="16x16"
+          href="{% static 'main/assets/images/favicon/favicon-16x16.webp' %}">
+    <link rel="manifest" href="{% static 'main/assets/images/favicon/site.webmanifest' %}">
+</head>
+
+<body data-bs-spy="scroll" data-bs-target=".navbar">
+
+<div id="content-wrapper">
+
+    {% block navbar %}
+    <!--Unique navbar for each page-->
+    {% endblock %}
+
+    {% block content %}
+    <!--Unique content for each page-->
+    {% endblock %}
+
+    <!-- FOOTER -->
+    {% include 'main/includes/footer.html' %}
+    <!-- //FOOTER -->
+
+</div>
+
+<!--    Javascript links-->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="{% static 'main/assets/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'main/assets/js/aos.js' %}"></script>
+<script src="{% static 'main/assets/js/main.js' %}"></script>
+<script src="{% static 'main/assets/js/button.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+        integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+        async></script>
+</body>
+
+</html>

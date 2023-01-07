@@ -1,0 +1,192 @@
+{% extends 'main/base.html' %}
+
+{% block navbar %}
+{% include 'main/includes/navbar_project.html' %}
+{% endblock %}
+
+{% block content %}
+<!--Project-->
+<section id="API" class="full-height px-lg-5">
+    <div class="container">
+        <div class="row pb-4" data-aos="fade-up">
+            <div class="col-lg-8">
+                <h1>Random APIs with task queue</h1>
+            </div>
+        </div>
+        <div class="row" data-aos="fade-up" data-aos-delay="300">
+            <div class="col-lg-12">
+                <h6>Links:</h6>
+            </div>
+            <div class="d-flex flex-row bd-highlight mb-3">
+                <div class="p-2 bd-highlight"><a href="#" target="_blank"
+                                                 rel="noopener noreferrer" class="link-custom">Code Link</a></div>
+            </div>
+            <div class="row pb-4" data-aos="fade-up" data-aos-delay="500">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-brand">Get your random quotes/jokes</button>
+                </form>
+            </div>
+        </div>
+        {% if api %}
+        <div class="row gy-5" data-masonry='{"percentPosition": true }' data-aos="fade-up" data-aos-delay="700">
+            <div class="col-md-6">
+                <div class="card-custom rounded-4 bg-base shadow-effect">
+                    <div class="card-custom-content p-4">
+                        <div class="card-header">
+                            <h5>Office quote</h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if api.0.error %}
+                                <p>{{ api.0.message }}</p>
+                                {% else %}
+                                <p>{{ api.0.data.content }}</p>
+                                <p>- {{ api.0.data.character.firstname }} {{ api.0.data.character.lastname }}</p>
+                                {% endif %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-custom rounded-4 bg-base shadow-effect">
+                    <div class="card-custom-content p-4">
+                        <div class="card-header">
+                            <h5>Chuck Norris joke</h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if api.1.error %}
+                                <p>{{ api.1.message }}</p>
+                                {% else %}
+                                <p>{{ api.1.joke }}</p>
+                                {% endif %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-custom rounded-4 bg-base shadow-effect">
+                    <div class="card-custom-content p-4">
+                        <div class="card-header">
+                            <h5>Dad joke</h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if api.2.error %}
+                                <p>{{ api.2.message }}</p>
+                                {% else %}
+                                <p>{{ api.2.0.joke }}</p>
+                                {% endif %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-custom rounded-4 bg-base shadow-effect">
+                    <div class="card-custom-content p-4">
+                        <div class="card-header">
+                            <h5>Random quote</h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if api.3.error %}
+                                <p>{{ api.3.message }}</p>
+                                {% else %}
+                                <p>{{ api.3.0.quote }}</p>
+                                <p>- {{ api.3.0.author }}</p>
+                                {% endif %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-custom rounded-4 bg-base shadow-effect">
+                    <div class="card-custom-content p-4">
+                        <div class="card-header">
+                            <h5>Programming joke</h5>
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                {% if api.4.error %}
+                                <p>{{ api.4.message }}</p>
+                                {% else %}
+                                <p>- {{ api.4.setup }}</p>
+                                <p>- {{ api.4.delivery }}</p>
+                                {% endif %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+<!--//Project-->
+<!--Description-->
+<section id="description" class="full-height px-lg-5">
+    <div class="container">
+
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="500">
+            <div class="col-lg-12">
+                <h4>Description</h4>
+            </div>
+        </div>
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="700">
+            <div class="card-custom rounded-4 bg-base shadow-effect">
+                <div class="card-custom-content p-4">
+                    <p>In this project, my goal was to learn about asynchronous task execution.</p>
+                    <p>The idea was to make multiple API calls to different endpoints that could be executed
+                        asynchronously (instead of calling them one after the other), resulting in a shorter server
+                        response.</p>
+                    <p>To use this application, simply click on the "Get your random quotes/jokes" button, wait for the
+                        page to refresh, and enjoy the humorous content.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--//Description-->
+<!--Technical brief-->
+<section id="technical-brief" class="full-height px-lg-5">
+    <div class="container">
+        <div class="row pb-4" data-aos="fade-up" d>
+            <div class="col-lg-12">
+                <h4>Technical brief</h4>
+            </div>
+        </div>
+        <div class="row pb-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card-custom rounded-4 bg-base shadow-effect">
+                <div class="card-custom-content p-4">
+                    <p>I used the following tools: Celery Python package as task queue, RabbitMQ as broker for Celery,
+                        Redis as backend to store results of the tasks executed by Celery.</p>
+                    <p>First, I created a Docker service with a monolithic Django application. This application has only
+                        one view that renders the HTML template you are seeing right now, and sends the tasks to the
+                        broker.
+                        For the tasks, I chose five different public API calls. To send tasks, I had to create a
+                        Celery instance which is linked to two other Docker services: the broker (RabbitMQ) and the
+                        backend (Redis). After that, I could simply use the send_task method, which resulted in an
+                        AsyncResult instance. The get method of the object returned the data received from the public
+                        API. I had to be careful here because if I had called the get method right after the send_task
+                        method with each task, the tasks would have been executed after each other. To take advantage of
+                        asynchronous parallel execution, I had to call each task's send_task method first and only then
+                        use the get method for the result objects.</p>
+                    <p>When tasks arrive at the broker service, another service picks them up, called celeryworker. In
+                        this service a celery worker is initialized in it with two processes (only two, because
+                        according to the documentation the process pool should not exceed twice the number of CPUs) to
+                        perform the tasks. This service also has a tasks.py module that contains the code for the tasks
+                        that the worker can execute.</p>
+                    <p>After a task is executed, the result is returned to the Django application, and after processing
+                        them, renders this web page with the results included..</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--//Technical brief-->
+{% endblock %}
