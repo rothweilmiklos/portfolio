@@ -184,9 +184,67 @@ services:
     volumes:
       - inventory_data:/var/lib/postgresql/data
 
+  randomapis:
+    image: kcisijohnny/randomapis
+    ports:
+      - '8004'
+    secrets:
+      - debug
+      - random_apis_secret_key
+      - ninja_api_key
+    links:
+      - redis
+    networks:
+      - task_queue
+      - portfolio_network
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672'
+    links:
+      - redis
+    networks:
+      - task_queue
+
+  redis:
+    image: redis
+    ports:
+      - '6379'
+    networks:
+      - task_queue
+
+  celeryworker:
+    image: kcisijohnny/celeryworker
+    depends_on:
+      - random_apis
+      - rabitmq
+      - redis
+    links:
+      - redis
+    networks:
+      - task_queue
+
+#  flower:
+#    image: mher/flower
+#    command:
+#      - "celery"
+#      - "--broker=amqp://rabitmq:5672//"
+#      - "flower"
+#    ports:
+#      - '5556:5555'
+#    depends_on:
+#      - random_apis
+#      - redis
+#      - rabitmq
+#      - celery_worker
+#    networks:
+#      - task_queue
+
 
 networks:
   portfolio_network:
+  task_queue:
 
 volumes:
   portfolio_statics:
@@ -242,4 +300,7 @@ secrets:
     external: true
   inventory_secret_key:
     external: true
-
+  random_apis_secret_key:
+    external: true
+  ninja_api_key:
+    external: true
