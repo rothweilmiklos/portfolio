@@ -17,6 +17,5 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('middle_earth_app.urls')),
+    path('random-apis/', include('main.urls')),
 ]
