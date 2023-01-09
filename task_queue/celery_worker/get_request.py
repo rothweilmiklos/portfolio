@@ -33,7 +33,11 @@ class GetRequest:
         self.__send_get_request()
 
     def __send_get_request(self):
-        self.get_response = requests.get(url=self.end_point, headers=self.headers, params=self.parameters)
+        try:
+            self.get_response = requests.get(url=self.end_point, headers=self.headers, params=self.parameters)
+        except requests.exceptions.RequestException:
+            self.get_response = requests.Response()
+            self.get_response.status_code = 500
 
     def get_api_response(self):
         self.validate.validate_response(self.get_response)
