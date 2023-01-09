@@ -5,4 +5,4 @@ WORKDIR /code
 COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
-CMD celery -A tasks worker --concurrency=2 --loglevel=debug
+CMD celery -A tasks worker --concurrency=2 --loglevel=INFO
