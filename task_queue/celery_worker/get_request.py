@@ -15,7 +15,7 @@ class ValidateRequest(Validate):
         self.error = False
         self.error_message = None
 
-    def validate_response(self, response):
+    def validate_response(self, response: requests.Response):
         if not response.ok:
             self.error = True
             self.error_message = {"error": True,
