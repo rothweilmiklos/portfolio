@@ -16,16 +16,12 @@ services:
       - portfolio_network
 
   portfolio:
-#    for production uncomment the line below:
     image: kcisijohnny/portfolio
     secrets:
       - portfolio_secret_key
       - debug
       - aws_access_key
       - aws_secret_key
-#    for development uncomment the line below:
-#    build: portfolio
-#    restart: always
     ports:
       - '5000'
     networks:
@@ -33,22 +29,14 @@ services:
     volumes:
       - ./portfolio/:/code/
       - portfolio_statics:/code/staticfiles
-#    environment:
-#      - DEBUG=1
-#      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthfront:
-    #    for production uncomment the line below:
     image: kcisijohnny/front
     secrets:
       - front_postgres_password
       - front_secret_key
       - debug
       - public_key
-    #    for development uncomment the line below:
-#    build: middle_earth_front
-#    restart: always
     ports:
       - '8000'
     depends_on:
@@ -58,13 +46,8 @@ services:
     volumes:
       - ./middle_earth_front/:/code/
       - middle_earth_statics:/code/staticfiles
-#    environment:
-#      - DEBUG=1
-#      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthauth:
-    #    for production uncomment the line below:
     image: kcisijohnny/auth
     secrets:
       - auth_postgres_password
@@ -72,9 +55,6 @@ services:
       - debug
       - signing_key
       - public_key
-    #    for development uncomment the lines below:
-#    build: middle_earth_auth
-#    restart: always
     ports:
       - '8001:8001'
     depends_on:
@@ -83,21 +63,13 @@ services:
       - portfolio_network
     volumes:
       - ./middle_earth_auth/:/code/
-#    environment:
-#      - DEBUG=1
-#      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthitems:
-    #    for production uncomment the line below:
     image: kcisijohnny/items
     secrets:
       - items_postgres_password
       - items_secret_key
       - debug
-    #    for development uncomment the line below:
-#    build: middle_earth_items
-#    restart: always
     ports:
       - '8002:8002'
     depends_on:
@@ -106,13 +78,8 @@ services:
       - portfolio_network
     volumes:
       - ./middle_earth_items/:/code/
-#    environment:
-#      - DEBUG=1
-#      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_PASSWORD=e5runertuw54u542
 
   middleearthinventory:
-    #    for production uncomment the line below:
     image: kcisijohnny/inventory
     secrets:
       - inventory_postgres_password
@@ -120,9 +87,6 @@ services:
       - debug
       - signing_key
       - public_key
-    #    for development uncomment the line below:
-#    build: middle_earth_inventory
-#    restart: always
     ports:
       - '8003:8003'
     depends_on:
@@ -131,10 +95,6 @@ services:
       - portfolio_network
     volumes:
       - ./middle_earth_inventory/:/code/
-#    environment:
-#      - DEBUG=1
-#      - DJANGO_SECRET_KEY=##4cyfssb-1#wpn)cifrdc22-n-=yv-n)#7eofx7p==-ibg
-#      - POSTGRES_PASSWORD=e5runertuw54u542
 
   db_front:
     image: postgres
@@ -143,7 +103,6 @@ services:
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_PASSWORD=e5runertuw54u542
       - POSTGRES_PASSWORD_FILE=/run/secrets/front_postgres_password
     volumes:
       - front_data:/var/lib/postgresql/data
@@ -155,7 +114,6 @@ services:
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_PASSWORD=e5runertuw54u542
       - POSTGRES_PASSWORD_FILE=/run/secrets/auth_postgres_password
     volumes:
       - auth_data:/var/lib/postgresql/data
@@ -167,7 +125,6 @@ services:
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_PASSWORD=e5runertuw54u542
       - POSTGRES_PASSWORD_FILE=/run/secrets/items_postgres_password
     volumes:
       - items_data:/var/lib/postgresql/data
@@ -179,7 +136,6 @@ services:
     networks:
       - portfolio_network
     environment:
-#      - POSTGRES_PASSWORD=e5runertuw54u542
       - POSTGRES_PASSWORD_FILE=/run/secrets/inventory_postgres_password
     volumes:
       - inventory_data:/var/lib/postgresql/data
@@ -224,23 +180,6 @@ services:
       - redis
     networks:
       - task_queue
-
-#  flower:
-#    image: mher/flower
-#    command:
-#      - "celery"
-#      - "--broker=amqp://rabitmq:5672//"
-#      - "flower"
-#    ports:
-#      - '5556:5555'
-#    depends_on:
-#      - random_apis
-#      - redis
-#      - rabitmq
-#      - celery_worker
-#    networks:
-#      - task_queue
-
 
 networks:
   portfolio_network:
